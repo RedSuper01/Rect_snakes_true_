@@ -33,9 +33,24 @@ def load_image(name, colorkey=None):
 def look_levels():
     fon = pygame.transform.scale(load_image('fon1.png'), size)
     screen.blit(fon, (0, 0))
-    font = pygame.font.Font(None, 70)
-    intro_text = list(map(str, range(10)))
+    font = pygame.font.Font(None, 150)
+    intro_text = []
+    intro_text.append(list(map(str, range(1, 6))))
+    intro_text.append(list(map(str, range(6, 11))))
+    intro_text.append(list(map(str, range(11, 16))))
+    intro_text.append(list(map(str, range(16, 21))))
     print(intro_text)
+    for i in intro_text:
+        for j in i:
+            text = font.render(j, True, (255, 255, 255))
+            if int(j) % 5 != 0:
+                text_x = (int(j) % 5) * 150 - 50
+            else:
+                text_x = 5 * 150 - 50
+            text_y = 50 + 150 * intro_text.index(i)
+            text_w = text.get_width()
+            text_h = text.get_height()
+            screen.blit(text, (text_x, text_y))
 
     all_sprites = pygame.sprite.Group()
 
@@ -76,7 +91,7 @@ def splash_screen():
     font = pygame.font.Font(None, 70)
     text_coord = 50
     for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('blue'))
+        string_rendered = font.render(line, 1, pygame.Color('white'))
         intro_rect = string_rendered.get_rect()
         text_coord += 50
         intro_rect.top = text_coord
