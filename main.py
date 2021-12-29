@@ -30,7 +30,43 @@ def load_image(name, colorkey=None):
     return image
 
 
-def start_screen():
+def look_levels():
+    fon = pygame.transform.scale(load_image('fon1.png'), size)
+    screen.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 70)
+    intro_text = list(map(str, range(10)))
+    print(intro_text)
+
+    all_sprites = pygame.sprite.Group()
+
+    back_arrow_sprite = pygame.sprite.Sprite()
+
+    back_arrow_sprite.image = load_image('back_arrow.png', colorkey=-1)
+    back_arrow_sprite.image = pygame.transform.scale(back_arrow_sprite.image, (100, 100))
+
+    back_arrow_sprite.rect = back_arrow_sprite.image.get_rect()
+    back_arrow_sprite.rect.x = 0
+    back_arrow_sprite.rect.y = 0
+
+    all_sprites.add(back_arrow_sprite)
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if x <= 100 and y <= 100:
+                    splash_screen()
+                    running = False
+                    break
+
+        all_sprites.draw(screen)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+def splash_screen():
     intro_text = ['Прямоугольники и змейки', '', 'Правила игры',
                   'Начать игру',
                   'Изменение дизайна',
@@ -48,8 +84,8 @@ def start_screen():
         text_coord += intro_rect.height
         print(intro_rect)
         screen.blit(string_rendered, intro_rect)
-
-    while True:
+    running = True
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
@@ -59,6 +95,10 @@ def start_screen():
                     print('Правила игры')
                 elif (x >= 10 and x < 300) and (y >= 397 and y <= 450):
                     print('Начать игру')
+                    look_levels()
+                    running = False
+                    break
+
                 elif (x >= 10 and x <= 490) and (y >= 497 and y <= 545):
                     print('Изменение дизайна')
                 elif (x >= 10 and x <= 265) and (y >= 595 and y <= 644):
@@ -66,4 +106,4 @@ def start_screen():
         pygame.display.flip()
         clock.tick(FPS)
 
-start_screen()
+splash_screen()
