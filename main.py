@@ -6,6 +6,25 @@ pygame.init()
 size = width, height = 900, 700
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
+levels_dict_coord = {'1': '', '2': '', '3': '', '4': '', '5': '',
+                     '6': '', '7': '', '8': '', '9': '', '10': '',
+                     '11': '', '12': '', '13': '', '14': '', '15': '',
+                     '16': '', '17': '', '18': '', '19': '', '20': ''}
+
+
+def check_click(mouse_x, mouse_y, tuple_of_coord):
+    text_x, text_y, text_w, text_h = tuple_of_coord
+    start_x, end_x, start_y, end_y = text_x, text_x + text_w, text_y, text_y + text_h
+    if start_x <= mouse_x <= end_x and start_y <= mouse_y <= end_y:
+        for i in list(levels_dict_coord.keys()):
+            if levels_dict_coord[i] == tuple_of_coord:
+                number_of_level = int(i)
+                return number_of_level
+    else:
+        return ''
+
+def launch_level(number_of_level):
+    print(number_of_level)
 
 def terminate():
     pygame.quit()
@@ -39,7 +58,6 @@ def look_levels():
     intro_text.append(list(map(str, range(6, 11))))
     intro_text.append(list(map(str, range(11, 16))))
     intro_text.append(list(map(str, range(16, 21))))
-    print(intro_text)
     for i in intro_text:
         for j in i:
             text = font.render(j, True, (255, 255, 255))
@@ -51,6 +69,8 @@ def look_levels():
             text_w = text.get_width()
             text_h = text.get_height()
             screen.blit(text, (text_x, text_y))
+
+            levels_dict_coord[str(j)] = (text_x, text_y, text_w, text_h)
 
     all_sprites = pygame.sprite.Group()
 
@@ -69,13 +89,15 @@ def look_levels():
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                terminate()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
                 if x <= 100 and y <= 100:
                     splash_screen()
-                    running = False
-                    break
+                for i in list(levels_dict_coord.values()):
+                    something = check_click(x, y, i)
+                    if something != '':
+                        launch_level(int(something))
 
         all_sprites.draw(screen)
         pygame.display.flip()
@@ -97,7 +119,6 @@ def splash_screen():
         intro_rect.top = text_coord
         intro_rect.x = 10
         text_coord += intro_rect.height
-        print(intro_rect)
         screen.blit(string_rendered, intro_rect)
     running = True
     while running:
@@ -111,8 +132,6 @@ def splash_screen():
                 elif (x >= 10 and x < 300) and (y >= 397 and y <= 450):
                     print('Начать игру')
                     look_levels()
-                    running = False
-                    break
 
                 elif (x >= 10 and x <= 490) and (y >= 497 and y <= 545):
                     print('Изменение дизайна')
