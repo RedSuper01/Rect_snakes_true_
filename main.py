@@ -1,6 +1,8 @@
 import pygame
 import sys
 import os
+import random
+
 FPS = 100
 pygame.init()
 size = width, height = 900, 700
@@ -10,26 +12,9 @@ levels_dict_coord = {'1': '', '2': '', '3': '', '4': '', '5': '',
                      '6': '', '7': '', '8': '', '9': '', '10': '',
                      '11': '', '12': '', '13': '', '14': '', '15': '',
                      '16': '', '17': '', '18': '', '19': '', '20': ''}
-
-
-def check_click(mouse_x, mouse_y, tuple_of_coord):
-    text_x, text_y, text_w, text_h = tuple_of_coord
-    start_x, end_x, start_y, end_y = text_x, text_x + text_w, text_y, text_y + text_h
-    if start_x <= mouse_x <= end_x and start_y <= mouse_y <= end_y:
-        for i in list(levels_dict_coord.keys()):
-            if levels_dict_coord[i] == tuple_of_coord:
-                number_of_level = int(i)
-                return number_of_level
-    else:
-        return ''
-
-def launch_level(number_of_level):
-    print(number_of_level)
-
-def terminate():
-    pygame.quit()
-    sys.exit()
-
+all_sprites = pygame.sprite.Group()
+horizontal_borders = pygame.sprite.Group()
+vertical_borders = pygame.sprite.Group()
 
 def load_image(name, colorkey=None):
     fullname = 'data\\' + name
@@ -47,6 +32,98 @@ def load_image(name, colorkey=None):
     else:
         image = image.convert_alpha()
     return image
+
+
+def check_click(mouse_x, mouse_y, tuple_of_coord):
+    text_x, text_y, text_w, text_h = tuple_of_coord
+    start_x, end_x, start_y, end_y = text_x, text_x + text_w, text_y, text_y + text_h
+    if start_x <= mouse_x <= end_x and start_y <= mouse_y <= end_y:
+        for i in list(levels_dict_coord.keys()):
+            if levels_dict_coord[i] == tuple_of_coord:
+                number_of_level = int(i)
+                return number_of_level
+    else:
+        return ''
+
+
+class Ball(pygame.sprite.Sprite):
+    def __init__(self, radius, x, y):
+        super().__init__(all_sprites)
+        self.radius = radius
+        self.image = pygame.Surface((225, 225), pygame.SRCALPHA, 32)
+        fon = pygame.transform.scale(load_image('snake1.png', -1), (50, 50))
+        self.image.blit(fon, (0, 0))
+        self.rect = pygame.Rect(x, y, 50, 50)
+        self.vx = random.randint(-5, 5)
+        self.vy = random.randint(-5, 5)
+
+    def update(self):
+        self.rect = self.rect.move(self.vx, self.vy)
+        if pygame.sprite.spritecollideany(self, horizontal_borders):
+            self.vy = -self.vy
+        if pygame.sprite.spritecollideany(self, vertical_borders):
+            self.vx = -self.vx
+
+
+class Border(pygame.sprite.Sprite):
+    def __init__(self, x1, y1, x2, y2):
+        super().__init__(all_sprites)
+        if x1 == x2:
+            self.add(vertical_borders)
+            self.image = pygame.Surface([5, y2 - y1])
+            self.rect = pygame.Rect(x1, y1, 5, y2 - y1)
+        else:
+            self.add(horizontal_borders)
+            self.image = pygame.Surface([x2 - x1, 5])
+            self.rect = pygame.Rect(x1, y1, x2 - x1, 5)
+
+
+def change_diff(number_of_level):
+    if number_of_level <= 2:
+        return 10
+    elif number_of_level <= 4:
+        return 12
+    elif number_of_level <= 10:
+        return 16
+    elif number_of_level <= 14:
+        return 18
+    elif number_of_level <= 19:
+        return 20
+    else:
+        return 30
+
+def launch_level(number_of_level):
+    try:
+        fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
+        screen.blit(fon, (0, 0))
+
+        Border(150, 150, 750, 150)
+        Border(150, 550, 750, 550)
+        Border(150, 150, 150, 550)
+        Border(750, 150, 750, 550)
+
+        n = change_diff(int(number_of_level))
+        for i in range(n):
+            Ball(20, 200, 200)
+        print('fs')
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    terminate()
+            fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
+            screen.blit(fon, (0, 0))
+            all_sprites.draw(screen)
+            all_sprites.update()
+            pygame.display.flip()
+            clock.tick(50)
+    except Exception as e:
+        print(e)
+
+
+def terminate():
+    pygame.quit()
+    sys.exit()
 
 
 def look_levels():
@@ -71,8 +148,6 @@ def look_levels():
             screen.blit(text, (text_x, text_y))
 
             levels_dict_coord[str(j)] = (text_x, text_y, text_w, text_h)
-
-    all_sprites = pygame.sprite.Group()
 
     back_arrow_sprite = pygame.sprite.Sprite()
 
