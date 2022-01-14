@@ -102,6 +102,12 @@ def launch_level(number_of_level):
         Border(150, 150, 150, 550)
         Border(750, 150, 750, 550)
 
+        cursor = pygame.sprite.Sprite()
+        cursor.image = pygame.transform.scale(load_image('cursor.png'), (30, 30))
+        cursor.rect = cursor.image.get_rect()
+        cursor.rect.x, cursor.rect.y = 135, 135
+        all_sprites.add(cursor)
+
         n = change_diff(int(number_of_level))
         for i in range(n):
             Ball(20, 200, 200)
@@ -111,6 +117,27 @@ def launch_level(number_of_level):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     terminate()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_w:
+                        if cursor.rect.x == 135 or cursor.rect.x == 735:
+                            cursor.rect.y -= 25
+                            if cursor.rect.y < 135:
+                                cursor.rect.y = 135
+                    elif event.key == pygame.K_s:
+                        if cursor.rect.x == 135 or cursor.rect.x == 735:
+                            cursor.rect.y += 25
+                            if cursor.rect.y > 535:
+                                cursor.rect.y = 535
+                    elif event.key == pygame.K_a:
+                        if cursor.rect.y == 135 or cursor.rect.y == 535:
+                            cursor.rect.x -= 25
+                            if cursor.rect.x < 135:
+                                cursor.rect.x = 135
+                    elif event.key == pygame.K_d:
+                        if cursor.rect.y == 135 or cursor.rect.y == 535:
+                            cursor.rect.x += 25
+                            if cursor.rect.x > 735:
+                                cursor.rect.x = 735
             fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
             screen.blit(fon, (0, 0))
             all_sprites.draw(screen)
