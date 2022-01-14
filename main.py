@@ -15,6 +15,11 @@ levels_dict_coord = {'1': '', '2': '', '3': '', '4': '', '5': '',
 all_sprites = pygame.sprite.Group()
 horizontal_borders = pygame.sprite.Group()
 vertical_borders = pygame.sprite.Group()
+vertical_lines = pygame.sprite.Group()
+horizontal_lines = pygame.sprite.Group()
+all_snakes = pygame.sprite.Group()
+dc_snakes = {}
+
 
 def load_image(name, colorkey=None):
     fullname = 'data\\' + name
@@ -45,8 +50,20 @@ def check_click(mouse_x, mouse_y, tuple_of_coord):
     else:
         return ''
 
+def check_snake(coord, type, n):
+    if type == 'vertical':
+        for i in range(n):
+            if dc_snakes[i].rect.y >= coord and dc_snakes[i].rect.y + 225 >= coord:
 
-class Ball(pygame.sprite.Sprite):
+                return False
+    elif type == 'horizontal':
+        for i in range(n):
+            if dc_snakes[i].rect.x >= coord and dc_snakes[i].rect.x + 225 >= coord:
+
+                return False
+    return True
+
+class Snake(pygame.sprite.Sprite):
     def __init__(self, radius, x, y):
         super().__init__(all_sprites)
         self.radius = radius
@@ -78,6 +95,31 @@ class Border(pygame.sprite.Sprite):
             self.rect = pygame.Rect(x1, y1, x2 - x1, 5)
 
 
+class Lines(pygame.sprite.Sprite):
+    def __init__(self, x, y, type_of_line):
+        super().__init__(all_sprites)
+        self.ax, self.ay, self.type_of_line = x, y, type_of_line
+
+        if self.type_of_line == 'vertical':
+            self.add(vertical_lines)
+            self.image = pygame.Surface([5, 430])
+            self.rect = pygame.Rect(x, y, 5, 430)
+            pygame.draw.line(screen, (0, 0, 0), (150, y), (550, y), 5)
+
+        elif self.type_of_line == 'horizontal':
+            self.add(horizontal_lines)
+            self.image = pygame.Surface([630, 5])
+            self.rect = pygame.Rect(x, y + 15, 630, 5)
+            pygame.draw.line(screen, (0, 0, 0), (x, 150), (x, 750), 5)
+
+    def update(self):
+        if pygame.sprite.spritecollide(self, all_snakes, False):
+            if self.type_of_line == 'vertical':
+                pygame.draw.line(screen, (255, 0, 0), (self.x, self.y), (0, self.y), 5)
+            elif self.type_of_line == 'horizontal':
+                pygame.draw.line(screen, (255, 0, 0), (self.ax + 15, self.ay), (780, self.ay), 5)
+
+
 def change_diff(number_of_level):
     if number_of_level <= 2:
         return 10
@@ -91,6 +133,17 @@ def change_diff(number_of_level):
         return 20
     else:
         return 30
+
+def losing_screen():
+    fon = pygame.transform.scale(load_image('losing_fon1.png'), (width, height))
+    screen.blit(fon, (0, 0))
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+        pygame.display.flip()
+        clock.tick(50)
+
 
 def launch_level(number_of_level):
     try:
@@ -108,10 +161,13 @@ def launch_level(number_of_level):
         cursor.rect.x, cursor.rect.y = 135, 135
         all_sprites.add(cursor)
 
+        pause = False
+
         n = change_diff(int(number_of_level))
         for i in range(n):
-            Ball(20, 200, 200)
-        print('fs')
+            bg = Snake(20, 200, 200)
+            all_snakes.add(bg)
+            dc_snakes[i] = bg
         running = True
         while running:
             for event in pygame.event.get():
@@ -138,10 +194,25 @@ def launch_level(number_of_level):
                             cursor.rect.x += 25
                             if cursor.rect.x > 735:
                                 cursor.rect.x = 735
+                    elif event.key == pygame.K_SPACE:
+                        if (cursor.rect.x == 135 and cursor.rect.y == 135) or (cursor.rect.x == 135 and cursor.rect.y == 535):
+                            pass
+                        elif (cursor.rect.x == 735 and cursor.rect.y == 135) or (cursor.rect.x == 735 and cursor.rect.y == 535):
+                            pass
+                        elif cursor.rect.x == 135 or cursor.rect.x == 735:
+                            Lines(cursor.rect.x, cursor.rect.y, 'horizontal')
+                            flag_game = check_snake()
+                            pause = True
+                        elif cursor.rect.y == 135 or cursor.rect.y == 535:
+                            Lines(cursor.rect.x, cursor.rect.y, 'vertical')
+                            pause = True
             fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
             screen.blit(fon, (0, 0))
             all_sprites.draw(screen)
-            all_sprites.update()
+            vertical_lines.update()
+            horizontal_lines.update()
+            if not pause:
+                all_sprites.update()
             pygame.display.flip()
             clock.tick(50)
     except Exception as e:
