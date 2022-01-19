@@ -50,18 +50,6 @@ def check_click(mouse_x, mouse_y, tuple_of_coord):
     else:
         return ''
 
-def check_snake(coord, type, n):
-    if type == 'vertical':
-        for i in range(n):
-            if dc_snakes[i].rect.y >= coord and dc_snakes[i].rect.y + 225 >= coord:
-
-                return False
-    elif type == 'horizontal':
-        for i in range(n):
-            if dc_snakes[i].rect.x >= coord and dc_snakes[i].rect.x + 225 >= coord:
-
-                return False
-    return True
 
 class Snake(pygame.sprite.Sprite):
     def __init__(self, radius, x, y):
@@ -99,25 +87,31 @@ class Lines(pygame.sprite.Sprite):
     def __init__(self, x, y, type_of_line):
         super().__init__(all_sprites)
         self.ax, self.ay, self.type_of_line = x, y, type_of_line
+        self.losing = False
 
         if self.type_of_line == 'vertical':
             self.add(vertical_lines)
             self.image = pygame.Surface([5, 430])
             self.rect = pygame.Rect(x, y, 5, 430)
-            pygame.draw.line(screen, (0, 0, 0), (150, y), (550, y), 5)
+            pygame.draw.line(screen, (0, 0, 0), (self.ax + 1, 135), (self.ax + 1, 570), 5)
 
         elif self.type_of_line == 'horizontal':
             self.add(horizontal_lines)
             self.image = pygame.Surface([630, 5])
-            self.rect = pygame.Rect(x, y + 15, 630, 5)
-            pygame.draw.line(screen, (0, 0, 0), (x, 150), (x, 750), 5)
+            self.rect = pygame.Rect(x, y, 630, 5)
+            pygame.draw.line(screen, (0, 0, 0), (135, self.ay + 1), (765, self.ay + 1), 5)
 
     def update(self):
         if pygame.sprite.spritecollide(self, all_snakes, False):
             if self.type_of_line == 'vertical':
-                pygame.draw.line(screen, (255, 0, 0), (self.x, self.y), (0, self.y), 5)
+                pygame.draw.line(screen, (255, 0, 0), (self.ax + 1, 135), (self.ax + 1, 570), 7)
+                self.losing = True
             elif self.type_of_line == 'horizontal':
-                pygame.draw.line(screen, (255, 0, 0), (self.ax + 15, self.ay), (780, self.ay), 5)
+                pygame.draw.line(screen, (255, 0, 0), (135, self.ay + 1), (765, self.ay + 1), 7)
+                self.losing = True
+
+    def check_game(self):
+        return self.losing
 
 
 def change_diff(number_of_level):
@@ -134,19 +128,20 @@ def change_diff(number_of_level):
     else:
         return 30
 
-def losing_screen():
-    fon = pygame.transform.scale(load_image('losing_fon1.png'), (width, height))
-    screen.blit(fon, (0, 0))
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                terminate()
-        pygame.display.flip()
-        clock.tick(50)
-
-
 def launch_level(number_of_level):
     try:
+        global all_sprites
+        global all_snakes
+        global vertical_borders
+        global horizontal_borders
+        global vertical_lines
+        global horizontal_lines
+        all_sprites = pygame.sprite.Group()
+        horizontal_borders = pygame.sprite.Group()
+        vertical_borders = pygame.sprite.Group()
+        vertical_lines = pygame.sprite.Group()
+        horizontal_lines = pygame.sprite.Group()
+        all_snakes = pygame.sprite.Group()
         fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
         screen.blit(fon, (0, 0))
 
@@ -160,6 +155,18 @@ def launch_level(number_of_level):
         cursor.rect = cursor.image.get_rect()
         cursor.rect.x, cursor.rect.y = 135, 135
         all_sprites.add(cursor)
+
+        try_again_sprite = pygame.sprite.Sprite()
+        try_again_sprite.image = load_image('try_again.png', -1)
+        try_again_sprite.rect = try_again_sprite.image.get_rect()
+        all_sprites.add(try_again_sprite)
+        try_again_sprite.rect.x, try_again_sprite.rect.y = 1000, 1000
+
+        exit_sprite = pygame.sprite.Sprite()
+        exit_sprite.image = load_image('exit_button_4.png', -1)
+        exit_sprite.rect = exit_sprite.image.get_rect()
+        all_sprites.add(exit_sprite)
+        exit_sprite.rect.x, exit_sprite.rect.y = 1000, 1000
 
         pause = False
 
@@ -195,26 +202,53 @@ def launch_level(number_of_level):
                             if cursor.rect.x > 735:
                                 cursor.rect.x = 735
                     elif event.key == pygame.K_SPACE:
-                        if (cursor.rect.x == 135 and cursor.rect.y == 135) or (cursor.rect.x == 135 and cursor.rect.y == 535):
+
+                        if (cursor.rect.x == 135 and cursor.rect.y == 135) or (
+                                cursor.rect.x == 135 and cursor.rect.y == 535):
                             pass
-                        elif (cursor.rect.x == 735 and cursor.rect.y == 135) or (cursor.rect.x == 735 and cursor.rect.y == 535):
+                        elif (cursor.rect.x == 735 and cursor.rect.y == 135) or (
+                                cursor.rect.x == 735 and cursor.rect.y == 535):
                             pass
                         elif cursor.rect.x == 135 or cursor.rect.x == 735:
-                            Lines(cursor.rect.x, cursor.rect.y, 'horizontal')
-                            flag_game = check_snake()
+                            lines_type = Lines(cursor.rect.x, cursor.rect.y, 'horizontal')
                             pause = True
+
                         elif cursor.rect.y == 135 or cursor.rect.y == 535:
-                            Lines(cursor.rect.x, cursor.rect.y, 'vertical')
+                            lines_type = Lines(cursor.rect.x, cursor.rect.y, 'vertical')
                             pause = True
-            fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
-            screen.blit(fon, (0, 0))
-            all_sprites.draw(screen)
-            vertical_lines.update()
-            horizontal_lines.update()
-            if not pause:
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if lines_type.check_game():
+                        x, y = event.pos
+                        if 200 <= x <= 425 and 500 <= y <= 725:
+                            launch_level(number_of_level)
+                            break
+                        elif 400 <= x <= 710 and 530 <= y <= 693:
+                            splash_screen()
+                            break
+
+            if pause:
+                vertical_lines.update()  # Это чтобы понять проиграли ли мы или нет
+                horizontal_lines.update()  # Проверка на столкновение со змейкой
+                if lines_type.check_game():
+                    fon = pygame.transform.scale(load_image('losing_fon2.png'), (width, height))
+                    screen.blit(fon, (0, 0))
+                    all_sprites.draw(screen)
+                    vertical_lines.update()
+                    horizontal_lines.update()
+                    try_again_sprite.rect.x, try_again_sprite.rect.y = 200, 500
+                    exit_sprite.rect.x, exit_sprite.rect.y = 400, 530
+
+
+            else:
+                vertical_lines.update()
+                horizontal_lines.update()
+                fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
+                screen.blit(fon, (0, 0))
+                all_sprites.draw(screen)
                 all_sprites.update()
+
             pygame.display.flip()
-            clock.tick(50)
+            clock.tick(70)
     except Exception as e:
         print(e)
 
@@ -225,6 +259,7 @@ def terminate():
 
 
 def look_levels():
+    all_sprites = pygame.sprite.Group()
     fon = pygame.transform.scale(load_image('fon1.png'), size)
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 150)
@@ -262,6 +297,7 @@ def look_levels():
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+
                 terminate()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
@@ -270,11 +306,13 @@ def look_levels():
                 for i in list(levels_dict_coord.values()):
                     something = check_click(x, y, i)
                     if something != '':
+                        all_sprites.remove(back_arrow_sprite)
                         launch_level(int(something))
 
         all_sprites.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
+
 
 def splash_screen():
     intro_text = ['Прямоугольники и змейки', '', 'Правила игры',
@@ -312,5 +350,6 @@ def splash_screen():
                     print('Настройки')
         pygame.display.flip()
         clock.tick(FPS)
+
 
 splash_screen()
