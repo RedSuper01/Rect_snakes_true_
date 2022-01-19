@@ -20,6 +20,9 @@ horizontal_lines = pygame.sprite.Group()
 all_snakes = pygame.sprite.Group()
 dc_snakes = {}
 
+coord_of_rectangle = (x1, y1, x2, y2) = (150, 150, 750, 550)
+
+
 
 def load_image(name, colorkey=None):
     fullname = 'data\\' + name
@@ -136,6 +139,9 @@ def launch_level(number_of_level):
         global horizontal_borders
         global vertical_lines
         global horizontal_lines
+        global coord_of_rectangle
+
+        x1, y1, x2, y2 = coord_of_rectangle
         all_sprites = pygame.sprite.Group()
         horizontal_borders = pygame.sprite.Group()
         vertical_borders = pygame.sprite.Group()
@@ -145,10 +151,10 @@ def launch_level(number_of_level):
         fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
         screen.blit(fon, (0, 0))
 
-        Border(150, 150, 750, 150)
-        Border(150, 550, 750, 550)
-        Border(150, 150, 150, 550)
-        Border(750, 150, 750, 550)
+        Border(x1, y1, x2, y1)
+        Border(x1, y2, x2, y2)
+        Border(x1, y1, x1, y2)
+        Border(x2, y1, x2, y2)
 
         cursor = pygame.sprite.Sprite()
         cursor.image = pygame.transform.scale(load_image('cursor.png'), (30, 30))
@@ -182,38 +188,38 @@ def launch_level(number_of_level):
                     terminate()
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_w:
-                        if cursor.rect.x == 135 or cursor.rect.x == 735:
+                        if cursor.rect.x == x1 - 15 or cursor.rect.x == x2 - 15:
                             cursor.rect.y -= 25
-                            if cursor.rect.y < 135:
-                                cursor.rect.y = 135
+                            if cursor.rect.y < y1 - 15:
+                                cursor.rect.y = y1 - 15
                     elif event.key == pygame.K_s:
-                        if cursor.rect.x == 135 or cursor.rect.x == 735:
+                        if cursor.rect.x == x1 - 15 or cursor.rect.x == x2 - 15:
                             cursor.rect.y += 25
-                            if cursor.rect.y > 535:
-                                cursor.rect.y = 535
+                            if cursor.rect.y > y2 - 15:
+                                cursor.rect.y = y2 - 15
                     elif event.key == pygame.K_a:
-                        if cursor.rect.y == 135 or cursor.rect.y == 535:
+                        if cursor.rect.y == y1 - 15 or cursor.rect.y == y2 - 15:
                             cursor.rect.x -= 25
-                            if cursor.rect.x < 135:
-                                cursor.rect.x = 135
+                            if cursor.rect.x < x1 - 15:
+                                cursor.rect.x = x1 - 15
                     elif event.key == pygame.K_d:
-                        if cursor.rect.y == 135 or cursor.rect.y == 535:
+                        if cursor.rect.y == y1 - 15 or cursor.rect.y == y2 - 15:
                             cursor.rect.x += 25
-                            if cursor.rect.x > 735:
-                                cursor.rect.x = 735
+                            if cursor.rect.x > x2 - 15:
+                                cursor.rect.x = x2 - 15
                     elif event.key == pygame.K_SPACE:
 
-                        if (cursor.rect.x == 135 and cursor.rect.y == 135) or (
-                                cursor.rect.x == 135 and cursor.rect.y == 535):
+                        if (cursor.rect.x == x1 - 15 and cursor.rect.y == y1 - 15) or (
+                                cursor.rect.x == x1 - 15 and cursor.rect.y == y2 - 15):
                             pass
-                        elif (cursor.rect.x == 735 and cursor.rect.y == 135) or (
-                                cursor.rect.x == 735 and cursor.rect.y == 535):
+                        elif (cursor.rect.x == x2 - 15 and cursor.rect.y == y1 - 15) or (
+                                cursor.rect.x == x2 - 15 and cursor.rect.y == y2 - 15):
                             pass
-                        elif cursor.rect.x == 135 or cursor.rect.x == 735:
+                        elif cursor.rect.x == x1 - 15 or cursor.rect.x == x2 - 15:
                             lines_type = Lines(cursor.rect.x, cursor.rect.y, 'horizontal')
                             pause = True
 
-                        elif cursor.rect.y == 135 or cursor.rect.y == 535:
+                        elif cursor.rect.y == y1 - 15 or cursor.rect.y == y2 - 15:
                             lines_type = Lines(cursor.rect.x, cursor.rect.y, 'vertical')
                             pause = True
                 elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -237,8 +243,6 @@ def launch_level(number_of_level):
                     horizontal_lines.update()
                     try_again_sprite.rect.x, try_again_sprite.rect.y = 200, 500
                     exit_sprite.rect.x, exit_sprite.rect.y = 400, 530
-
-
             else:
                 vertical_lines.update()
                 horizontal_lines.update()
