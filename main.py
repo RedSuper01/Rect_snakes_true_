@@ -24,7 +24,6 @@ count_of_done_cuts = 0
 coord_of_rectangle = (x1, y1, x2, y2) = (150, 150, 750, 550)
 
 
-
 def load_image(name, colorkey=None):
     fullname = 'data\\' + name
     # если файл не существует, то выходим
@@ -132,159 +131,220 @@ def change_diff(number_of_level):
     else:
         return 30, 7
 
+
+def victory_screen(number_of_level):
+    global coord_of_rectangle
+    global count_of_done_cuts
+    x1, y1, x2, y2 = coord_of_rectangle
+    victory_sprite_group = pygame.sprite.Group()
+
+    try_again_sprite = pygame.sprite.Sprite()
+    try_again_sprite.image = pygame.transform.scale(load_image('try_again_2.png', -1), (100, 100))
+    try_again_sprite.rect = try_again_sprite.image.get_rect()
+    try_again_sprite.rect.x, try_again_sprite.rect.y = 350, 562
+    victory_sprite_group.add(try_again_sprite)
+
+    exit_button_sprite = pygame.sprite.Sprite()
+    exit_button_sprite.image = pygame.transform.scale(load_image('exit_button_5.png', -1), (100, 100))
+    exit_button_sprite.rect = exit_button_sprite.image.get_rect()
+    exit_button_sprite.rect.x, exit_button_sprite.rect.y = 500, 562
+    victory_sprite_group.add(exit_button_sprite)
+
+    fon = pygame.transform.scale(load_image('victory_fon.png'), (width, height))
+    screen.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 70)
+    text = font.render('Поздравляю!!!', True, (0, 0, 0))
+    screen.blit(text, (275, 50))
+    text_1 = font.render('Вы прошли ' + str(number_of_level) + '-ый уровень', True, (0, 0, 0))
+    screen.blit(text_1, (160, 100))
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                print(*event.pos)
+                x, y = event.pos
+                if 350 <= x <= 450 and 562 <= y <= 662:
+                    count_of_done_cuts = 0
+                    launch_level(number_of_level, x1, y1, x2, y2)
+                    break
+                elif 500 <= x <= 600 and 562 <= y <= 662:
+                    count_of_done_cuts = 0
+                    splash_screen()
+                    break
+        victory_sprite_group.draw(screen)
+        pygame.display.flip()
+        clock.tick(70)
+
+
 def launch_level(number_of_level, x1, y1, x2, y2):
-    try:
-        global all_sprites
-        global all_snakes
-        global vertical_borders
-        global horizontal_borders
-        global vertical_lines
-        global horizontal_lines
-        global screen
-        global count_of_done_cuts
+    global all_sprites
+    global all_snakes
+    global vertical_borders
+    global horizontal_borders
+    global vertical_lines
+    global horizontal_lines
+    global screen
+    global count_of_done_cuts
+    global coord_of_rectangle
 
-        all_sprites = pygame.sprite.Group()
-        horizontal_borders = pygame.sprite.Group()
-        vertical_borders = pygame.sprite.Group()
-        vertical_lines = pygame.sprite.Group()
-        horizontal_lines = pygame.sprite.Group()
-        all_snakes = pygame.sprite.Group()
-        fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
-        screen.blit(fon, (0, 0))
+    all_sprites = pygame.sprite.Group()
+    horizontal_borders = pygame.sprite.Group()
+    vertical_borders = pygame.sprite.Group()
+    vertical_lines = pygame.sprite.Group()
+    horizontal_lines = pygame.sprite.Group()
+    all_snakes = pygame.sprite.Group()
+    fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
+    screen.blit(fon, (0, 0))
 
-        Border(x1, y1, x2, y1)
-        Border(x1, y2, x2, y2)
-        Border(x1, y1, x1, y2)
-        Border(x2, y1, x2, y2)
+    Border(x1, y1, x2, y1)
+    Border(x1, y2, x2, y2)
+    Border(x1, y1, x1, y2)
+    Border(x2, y1, x2, y2)
 
-        cursor = pygame.sprite.Sprite()
-        cursor.image = pygame.transform.scale(load_image('cursor.png'), (30, 30))
-        cursor.rect = cursor.image.get_rect()
-        cursor.rect.x, cursor.rect.y = x1 - 15, y1 - 15
-        all_sprites.add(cursor)
+    cursor = pygame.sprite.Sprite()
+    cursor.image = pygame.transform.scale(load_image('cursor.png'), (30, 30))
+    cursor.rect = cursor.image.get_rect()
+    cursor.rect.x, cursor.rect.y = x1 - 15, y1 - 15
+    all_sprites.add(cursor)
 
-        try_again_sprite = pygame.sprite.Sprite()
-        try_again_sprite.image = load_image('try_again.png', -1)
-        try_again_sprite.rect = try_again_sprite.image.get_rect()
-        all_sprites.add(try_again_sprite)
-        try_again_sprite.rect.x, try_again_sprite.rect.y = 1000, 1000
+    try_again_sprite = pygame.sprite.Sprite()
+    try_again_sprite.image = load_image('try_again.png', -1)
+    try_again_sprite.rect = try_again_sprite.image.get_rect()
+    all_sprites.add(try_again_sprite)
+    try_again_sprite.rect.x, try_again_sprite.rect.y = 1000, 1000
 
-        exit_sprite = pygame.sprite.Sprite()
-        exit_sprite.image = load_image('exit_button_4.png', -1)
-        exit_sprite.rect = exit_sprite.image.get_rect()
-        all_sprites.add(exit_sprite)
-        exit_sprite.rect.x, exit_sprite.rect.y = 1000, 1000
+    exit_sprite = pygame.sprite.Sprite()
+    exit_sprite.image = load_image('exit_button_4.png', -1)
+    exit_sprite.rect = exit_sprite.image.get_rect()
+    all_sprites.add(exit_sprite)
+    exit_sprite.rect.x, exit_sprite.rect.y = 1000, 1000
 
-        pause = False
+    pause = False
 
+    n, count_cuts = change_diff(int(number_of_level))
+    for i in range(n):
+        bg = Snake(20, x1 + 50, y1 + 50)
+        all_snakes.add(bg)
+        dc_snakes[i] = bg
+    losing = False
+    victory = False
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN:
+                if not losing:
+                    if event.key == pygame.K_w:
+                        if cursor.rect.x == x1 - 15 or cursor.rect.x == x2 - 15:
+                            cursor.rect.y -= 25
+                            if cursor.rect.y < y1 - 15:
+                                cursor.rect.y = y1 - 15
+                    elif event.key == pygame.K_s:
+                        if cursor.rect.x == x1 - 15 or cursor.rect.x == x2 - 15:
+                            cursor.rect.y += 25
+                            if cursor.rect.y > y2 - 15:
+                                cursor.rect.y = y2 - 15
+                    elif event.key == pygame.K_a:
+                        if cursor.rect.y == y1 - 15 or cursor.rect.y == y2 - 15:
+                            cursor.rect.x -= 25
+                            if cursor.rect.x < x1 - 15:
+                                cursor.rect.x = x1 - 15
+                    elif event.key == pygame.K_d:
+                        if cursor.rect.y == y1 - 15 or cursor.rect.y == y2 - 15:
+                            cursor.rect.x += 25
+                            if cursor.rect.x > x2 - 15:
+                                cursor.rect.x = x2 - 15
+                    elif event.key == pygame.K_SPACE:
 
-        n, count_cuts = change_diff(int(number_of_level))
-        for i in range(n):
-            bg = Snake(20, x1 + 50, y1 + 50)
-            all_snakes.add(bg)
-            dc_snakes[i] = bg
-        losing = False
-        victory = False
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    terminate()
-                elif event.type == pygame.KEYDOWN:
-                    if not losing:
-                        if event.key == pygame.K_w:
-                            if cursor.rect.x == x1 - 15 or cursor.rect.x == x2 - 15:
-                                cursor.rect.y -= 25
-                                if cursor.rect.y < y1 - 15:
-                                    cursor.rect.y = y1 - 15
-                        elif event.key == pygame.K_s:
-                            if cursor.rect.x == x1 - 15 or cursor.rect.x == x2 - 15:
-                                cursor.rect.y += 25
-                                if cursor.rect.y > y2 - 15:
-                                    cursor.rect.y = y2 - 15
-                        elif event.key == pygame.K_a:
-                            if cursor.rect.y == y1 - 15 or cursor.rect.y == y2 - 15:
-                                cursor.rect.x -= 25
-                                if cursor.rect.x < x1 - 15:
-                                    cursor.rect.x = x1 - 15
-                        elif event.key == pygame.K_d:
-                            if cursor.rect.y == y1 - 15 or cursor.rect.y == y2 - 15:
-                                cursor.rect.x += 25
-                                if cursor.rect.x > x2 - 15:
-                                    cursor.rect.x = x2 - 15
-                        elif event.key == pygame.K_SPACE:
-
-                            if (cursor.rect.x == x1 - 15 and cursor.rect.y == y1 - 15) or (
-                                    cursor.rect.x == x1 - 15 and cursor.rect.y == y2 - 15):
-                                pass
-                            elif (cursor.rect.x == x2 - 15 and cursor.rect.y == y1 - 15) or (
-                                    cursor.rect.x == x2 - 15 and cursor.rect.y == y2 - 15):
-                                pass
-                            elif cursor.rect.x == x1 - 15 or cursor.rect.x == x2 - 15:
-                                lines_type = Lines(cursor.rect.x, cursor.rect.y, 'horizontal')
-                                pause = True
-
-                            elif cursor.rect.y == y1 - 15 or cursor.rect.y == y2 - 15:
-                                lines_type = Lines(cursor.rect.x, cursor.rect.y, 'vertical')
-                                pause = True
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if losing:
-                        x, y = event.pos
-                        if 200 <= x <= 425 and 500 <= y <= 725:
-                            launch_level(number_of_level, x1, y1, x2, y2)
-                            break
-                        elif 400 <= x <= 710 and 530 <= y <= 693:
-                            splash_screen()
-                            break
-
-            if not victory:
-                if pause:
-                    vertical_lines.update()  # Это чтобы понять проиграли ли мы или нет
-                    horizontal_lines.update()  # Проверка на столкновение со змейкой
-                    if lines_type.check_game():
-                        fon = pygame.transform.scale(load_image('losing_fon2.png'), (width, height))
-                        screen.blit(fon, (0, 0))
-                        all_sprites.draw(screen)
-                        losing = True
-                        vertical_lines.update()
-                        horizontal_lines.update()
-                        try_again_sprite.rect.x, try_again_sprite.rect.y = 200, 500
-                        exit_sprite.rect.x, exit_sprite.rect.y = 400, 530
-                    else:
-                        count_of_done_cuts += 1
-                        print(count_of_done_cuts, count_cuts)
-                        if count_of_done_cuts < count_cuts:
-                            if cursor.rect.x == x1 - 15 or cursor.rect.x == x2 - 15:
-                                if cursor.rect.y - 150 <= (y2 - y1) // 2:
-                                    y1 = cursor.rect.y
-                                    launch_level(number_of_level, x1, y1, x2, y2)
-                                else:
-                                    y2 = cursor.rect.y
-                                    launch_level(number_of_level, x1, y1, x2, y2)
-                            elif cursor.rect.y == y1 -15 or cursor.rect.y == y2 - 15:
-                                if cursor.rect.x - 150 <= (x2 - x1) // 2:
-                                    x1 = cursor.rect.x
-                                    launch_level(number_of_level, x1, y1, x2, y2)
-                                else:
-                                    x2 = cursor.rect.x
-                                    launch_level(number_of_level, x1, y1, x2, y2)
-                        else:
-                            print('Вы выиграли')
-                            victory = True
+                        if (cursor.rect.x == x1 - 15 and cursor.rect.y == y1 - 15) or (
+                                cursor.rect.x == x1 - 15 and cursor.rect.y == y2 - 15):
+                            pass
+                        elif (cursor.rect.x == x2 - 15 and cursor.rect.y == y1 - 15) or (
+                                cursor.rect.x == x2 - 15 and cursor.rect.y == y2 - 15):
+                            pass
+                        elif cursor.rect.x == x1 - 15 or cursor.rect.x == x2 - 15:
+                            lines_type = Lines(cursor.rect.x, cursor.rect.y, 'horizontal')
                             pause = True
 
-                else:
-                    vertical_lines.update()
-                    horizontal_lines.update()
-                    fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
+                        elif cursor.rect.y == y1 - 15 or cursor.rect.y == y2 - 15:
+                            lines_type = Lines(cursor.rect.x, cursor.rect.y, 'vertical')
+                            pause = True
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if losing:
+                    x, y = event.pos
+                    if 200 <= x <= 425 and 500 <= y <= 725:
+                        x1, y1, x2, y2 = coord_of_rectangle
+                        launch_level(number_of_level, x1, y1, x2, y2)
+                        break
+                    elif 400 <= x <= 710 and 530 <= y <= 693:
+                        splash_screen()
+                        break
+
+        if not victory:
+            if pause:
+                vertical_lines.update()  # Это чтобы понять проиграли ли мы или нет
+                horizontal_lines.update()  # Проверка на столкновение со змейкой
+                if lines_type.check_game():
+                    fon = pygame.transform.scale(load_image('losing_fon2.png'), (width, height))
                     screen.blit(fon, (0, 0))
                     all_sprites.draw(screen)
-                    all_sprites.update()
+                    losing = True
+                    vertical_lines.update()
+                    horizontal_lines.update()
+                    try_again_sprite.rect.x, try_again_sprite.rect.y = 200, 500
+                    exit_sprite.rect.x, exit_sprite.rect.y = 400, 530
 
-            pygame.display.flip()
-            clock.tick(70)
-    except Exception as e:
-        print(e)
+                    count_of_done_cuts = 0
+                else:
+                    count_of_done_cuts += 1
+                    print(count_of_done_cuts, count_cuts)
+                    if count_of_done_cuts < count_cuts:
+                        if cursor.rect.x == x1 - 15 or cursor.rect.x == x2 - 15:
+                            if cursor.rect.y - 150 <= (y2 - y1) // 2:
+                                y1 = cursor.rect.y
+                                if abs(x2 - x1) < 200 or abs(y2 - y1) < 200:
+                                    count_of_done_cuts = count_cuts
+                                    break
+                                launch_level(number_of_level, x1, y1, x2, y2)
+                            else:
+                                y2 = cursor.rect.y
+                                if abs(x2 - x1) < 200 or abs(y2 - y1) < 200:
+                                    count_of_done_cuts = count_cuts
+                                    break
+
+                                launch_level(number_of_level, x1, y1, x2, y2)
+                        elif cursor.rect.y == y1 - 15 or cursor.rect.y == y2 - 15:
+                            if cursor.rect.x - 150 <= (x2 - x1) // 2:
+                                x1 = cursor.rect.x
+                                if abs(x2 - x1) < 200 or abs(y2 - y1) < 200:
+                                    count_of_done_cuts = count_cuts
+                                    break
+
+                                launch_level(number_of_level, x1, y1, x2, y2)
+                            else:
+                                x2 = cursor.rect.x
+                                if x2 - x1 < 200 or y2 - y1 < 200:
+                                    count_of_done_cuts = count_cuts
+                                    break
+                                launch_level(number_of_level, x1, y1, x2, y2)
+                    else:
+                        victory = True
+                        pause = True
+                        victory_screen(number_of_level)
+                        count_of_done_cuts = 0
+
+            else:
+                vertical_lines.update()
+                horizontal_lines.update()
+                fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
+                screen.blit(fon, (0, 0))
+                all_sprites.draw(screen)
+                all_sprites.update()
+
+        pygame.display.flip()
+        clock.tick(70)
 
 
 def terminate():
