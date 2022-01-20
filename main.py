@@ -12,6 +12,10 @@ levels_dict_coord = {'1': '', '2': '', '3': '', '4': '', '5': '',
                      '6': '', '7': '', '8': '', '9': '', '10': '',
                      '11': '', '12': '', '13': '', '14': '', '15': '',
                      '16': '', '17': '', '18': '', '19': '', '20': ''}
+main_fon_dict_coord = {'1': ['fon1.png'], '2': ['fon2.png'], '3': ['fon3.png'], '4': ['fon4.png'], '5': ['fon5.png'],
+                       '6': ['fon6.png'], '7': ['fon7.png'], '8': ['fon8.png'], '9': ['fon9.png'], '10': ['fon10.png'],
+                       '11': ['fon11.png'], '12': ['fon12.png'], '13': ['fon13.png'], '14': ['fon14.png'], '15': ['fon15.png']
+                       }
 all_sprites = pygame.sprite.Group()
 horizontal_borders = pygame.sprite.Group()
 vertical_borders = pygame.sprite.Group()
@@ -24,7 +28,7 @@ count_of_done_cuts = 0
 coord_of_rectangle = (x1, y1, x2, y2) = (150, 150, 750, 550)
 
 
-def load_image(name, colorkey=None):
+def load_image(name, color_key=None):
     fullname = 'data\\' + name
     # если файл не существует, то выходим
     if not os.path.isfile(fullname):
@@ -32,24 +36,24 @@ def load_image(name, colorkey=None):
         sys.exit()
     image = pygame.image.load(fullname)
 
-    if colorkey is not None:
+    if color_key is not None:
         image = image.convert()
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
+        if color_key == -1:
+            color_key = image.get_at((0, 0))
+        image.set_colorkey(color_key)
     else:
         image = image.convert_alpha()
     return image
 
 
-def check_click(mouse_x, mouse_y, tuple_of_coord):
+def check_click(mouse_x, mouse_y, tuple_of_coord, dc):
     text_x, text_y, text_w, text_h = tuple_of_coord
     start_x, end_x, start_y, end_y = text_x, text_x + text_w, text_y, text_y + text_h
     if start_x <= mouse_x <= end_x and start_y <= mouse_y <= end_y:
-        for i in list(levels_dict_coord.keys()):
-            if levels_dict_coord[i] == tuple_of_coord:
-                number_of_level = int(i)
-                return number_of_level
+        for i in list(dc.keys()):
+            if dc[i] == tuple_of_coord:
+                number = int(i)
+                return number
     else:
         return ''
 
@@ -76,14 +80,16 @@ class Snake(pygame.sprite.Sprite):
 class Border(pygame.sprite.Sprite):
     def __init__(self, x1, y1, x2, y2):
         super().__init__(all_sprites)
-        if x1 == x2:
+        self.x1, self.y1 = x1, y1
+        self.x2, self.y2 = x2, y2
+        if self.x1 == self.x2:
             self.add(vertical_borders)
-            self.image = pygame.Surface([5, y2 - y1])
-            self.rect = pygame.Rect(x1, y1, 5, y2 - y1)
+            self.image = pygame.Surface([5, self.y2 - self.y1])
+            self.rect = pygame.Rect(self.x1, self.y1, 5, self.y2 - self.y1)
         else:
             self.add(horizontal_borders)
-            self.image = pygame.Surface([x2 - x1, 5])
-            self.rect = pygame.Rect(x1, y1, x2 - x1, 5)
+            self.image = pygame.Surface([self.x2 - self.x1, 5])
+            self.rect = pygame.Rect(self.x1, self.y1, self.x2 - self.x1, 5)
 
 
 class Lines(pygame.sprite.Sprite):
@@ -359,7 +365,7 @@ def look_levels():
     fon = pygame.transform.scale(load_image('fon1.png'), size)
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 150)
-    intro_text = []
+    intro_text = list()
     intro_text.append(list(map(str, range(1, 6))))
     intro_text.append(list(map(str, range(6, 11))))
     intro_text.append(list(map(str, range(11, 16))))
@@ -380,7 +386,7 @@ def look_levels():
 
     back_arrow_sprite = pygame.sprite.Sprite()
 
-    back_arrow_sprite.image = load_image('back_arrow.png', colorkey=-1)
+    back_arrow_sprite.image = load_image('back_arrow.png', color_key=-1)
     back_arrow_sprite.image = pygame.transform.scale(back_arrow_sprite.image, (100, 100))
 
     back_arrow_sprite.rect = back_arrow_sprite.image.get_rect()
@@ -400,12 +406,73 @@ def look_levels():
                 if x <= 100 and y <= 100:
                     splash_screen()
                 for i in list(levels_dict_coord.values()):
-                    something = check_click(x, y, i)
+                    something = check_click(x, y, i, levels_dict_coord)
                     if something != '':
                         all_sprites.remove(back_arrow_sprite)
                         launch_level(int(something), x1, y1, x2, y2)
 
         all_sprites.draw(screen)
+        pygame.display.flip()
+        clock.tick(FPS)
+
+def check_click_for_fon(mouse_x, mouse_y, tuple_of_coord, dc):
+    text_x, text_y, text_w, text_h = tuple_of_coord
+    start_x, end_x, start_y, end_y = text_x, text_x + text_w, text_y, text_y + text_h
+    if start_x <= mouse_x <= end_x and start_y <= mouse_y <= end_y:
+        print('fdfs')
+        for i in list(dc.keys()):
+            print(dc[i])
+            if dc[i][1] == tuple_of_coord:
+                number = int(i)
+                return number
+    else:
+        return ''
+
+def changing_design():
+    fon = pygame.transform.scale(load_image('fon2.png'), size)
+    screen.blit(fon, (0, 0))
+
+    font = pygame.font.Font(None, 60)
+    text = font.render('Главный фон', True, (255, 255, 255))
+    screen.blit(text, (50, 30))
+
+    intro_text_main = [list(map(str, range(1, 6))), list(map(str, range(6, 11))), list(map(str, range(11, 16)))]
+    for i in intro_text_main:
+        for j in i:
+            if int(j) % 5 != 0:
+                text_x = (int(j) % 5) * 60
+            else:
+                text_x = 300
+            text_y = 80 + intro_text_main.index(i) * 60
+            text_w, text_h = text.get_width(), text.get_height()
+            text = font.render(str(j), True, (255, 255, 255))
+            screen.blit(text, (text_x, text_y))
+            main_fon_dict_coord[j].append((text_x, text_y, text_w, text_h))
+
+    text_level = font.render('Фон уровня', True, (255, 255, 255))
+    screen.blit(text_level, (550, 30))
+    intro_text_level = [list(map(str, range(1, 6))), list(map(str, range(6, 11))), list(map(str, range(11, 16)))]
+    for i in intro_text_level:
+        for j in i:
+            if int(j) % 5 != 0:
+                text_x = 500 + (int(j) % 5) * 60
+            else:
+                text_x = 800
+            text_y = 80 + intro_text_level.index(i) * 60
+            text_w, text_h = text.get_width(), text.get_height()
+            text = font.render(str(j), True, (255, 255, 255))
+            screen.blit(text, (text_x, text_y))
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                for i in list(main_fon_dict_coord.values()):
+                    something = check_click_for_fon(x, y, i[1], main_fon_dict_coord)
+                    if something != '':
+                        print(something)
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -420,7 +487,7 @@ def splash_screen():
     font = pygame.font.Font(None, 70)
     text_coord = 50
     for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('white'))
+        string_rendered = font.render(line, True, pygame.Color('white'))
         intro_rect = string_rendered.get_rect()
         text_coord += 50
         intro_rect.top = text_coord
@@ -434,18 +501,19 @@ def splash_screen():
                 terminate()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
-                if (x >= 10 and x <= 350) and (y >= 298 and y <= 350):
+                if (10 <= x <= 350) and (298 <= y <= 350):
                     print('Правила игры')
-                elif (x >= 10 and x < 300) and (y >= 397 and y <= 450):
-                    print('Начать игру')
+                elif (10 <= x <= 300) and (397 <= y <= 450):
                     look_levels()
 
-                elif (x >= 10 and x <= 490) and (y >= 497 and y <= 545):
+                elif (10 <= x <= 490) and (497 <= y <= 545):
                     print('Изменение дизайна')
-                elif (x >= 10 and x <= 265) and (y >= 595 and y <= 644):
+                    changing_design()
+                elif (10 <= x <= 265) and (595 <= y <= 644):
                     print('Настройки')
         pygame.display.flip()
         clock.tick(FPS)
 
 
 splash_screen()
+pygame.quit()
