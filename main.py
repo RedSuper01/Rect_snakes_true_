@@ -8,14 +8,29 @@ pygame.init()
 size = width, height = 900, 700
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
+
 levels_dict_coord = {'1': '', '2': '', '3': '', '4': '', '5': '',
                      '6': '', '7': '', '8': '', '9': '', '10': '',
                      '11': '', '12': '', '13': '', '14': '', '15': '',
                      '16': '', '17': '', '18': '', '19': '', '20': ''}
 main_fon_dict_coord = {'1': ['fon1.png'], '2': ['fon2.png'], '3': ['fon3.png'], '4': ['fon4.png'], '5': ['fon5.png'],
                        '6': ['fon6.png'], '7': ['fon7.png'], '8': ['fon8.png'], '9': ['fon9.png'], '10': ['fon10.png'],
-                       '11': ['fon11.png'], '12': ['fon12.png'], '13': ['fon13.png'], '14': ['fon14.png'], '15': ['fon15.png']
+                       '11': ['fon11.png'], '12': ['fon12.png'], '13': ['fon13.png'], '14': ['fon14.png'], '15': ['fon15.png'],
+                       'main': 'main'
                        }
+level_fon_dict_coord = {'1': ['fon1.png'], '2': ['fon2.png'], '3': ['fon3.png'], '4': ['fon4.png'], '5': ['fon5.png'],
+                       '6': ['fon6.png'], '7': ['fon7.png'], '8': ['fon8.png'], '9': ['fon9.png'], '10': ['fon10.png'],
+                       '11': ['fon11.png'], '12': ['fon12.png'], '13': ['fon13.png'], '14': ['fon14.png'], '15': ['fon15.png'],
+                        'level': 'level'
+                       }
+victory_fon_dict_coord = {'1': ['victory_fon.png'], '2': ['victory_fon2.png'], '3': ['victory_fon3.png'],
+                        '4': ['victory_fon4.png'], '5': ['victory_fon5.png'], '6': ['victory_fon6.png'],
+                         '7': ['victory_fon7.png'],
+                          'victory': 'victory'}
+losing_fon_dict_coord = {'1': ['losing_fon1.png'], '2': ['losing_fon2.png'], 'losing': 'losing'}
+
+dc_of_all_dict = {'main': main_fon_dict_coord, 'level': level_fon_dict_coord, 'victory': victory_fon_dict_coord, 'losing': losing_fon_dict_coord}
+
 all_sprites = pygame.sprite.Group()
 horizontal_borders = pygame.sprite.Group()
 vertical_borders = pygame.sprite.Group()
@@ -23,9 +38,11 @@ vertical_lines = pygame.sprite.Group()
 horizontal_lines = pygame.sprite.Group()
 all_snakes = pygame.sprite.Group()
 dc_snakes = {}
-count_of_done_cuts = 0
 
+count_of_done_cuts = 0
 coord_of_rectangle = (x1, y1, x2, y2) = (150, 150, 750, 550)
+
+main_fon, level_fon, victory_fon, losing_fon = 'fon1.png', 'fon4.png', 'victory_fon.png', 'losing_fon2.png'
 
 
 def load_image(name, color_key=None):
@@ -156,7 +173,7 @@ def victory_screen(number_of_level):
     exit_button_sprite.rect.x, exit_button_sprite.rect.y = 500, 562
     victory_sprite_group.add(exit_button_sprite)
 
-    fon = pygame.transform.scale(load_image('victory_fon.png'), (width, height))
+    fon = pygame.transform.scale(load_image(victory_fon), (width, height))
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 70)
     text = font.render('Поздравляю!!!', True, (0, 0, 0))
@@ -200,7 +217,7 @@ def launch_level(number_of_level, x1, y1, x2, y2):
     vertical_lines = pygame.sprite.Group()
     horizontal_lines = pygame.sprite.Group()
     all_snakes = pygame.sprite.Group()
-    fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
+    fon = pygame.transform.scale(load_image(level_fon), (width, height))
     screen.blit(fon, (0, 0))
 
     Border(x1, y1, x2, y1)
@@ -293,7 +310,7 @@ def launch_level(number_of_level, x1, y1, x2, y2):
                 vertical_lines.update()  # Это чтобы понять проиграли ли мы или нет
                 horizontal_lines.update()  # Проверка на столкновение со змейкой
                 if lines_type.check_game():
-                    fon = pygame.transform.scale(load_image('losing_fon2.png'), (width, height))
+                    fon = pygame.transform.scale(load_image(losing_fon), (width, height))
                     screen.blit(fon, (0, 0))
                     all_sprites.draw(screen)
                     losing = True
@@ -344,7 +361,7 @@ def launch_level(number_of_level, x1, y1, x2, y2):
             else:
                 vertical_lines.update()
                 horizontal_lines.update()
-                fon = pygame.transform.scale(load_image('fon4.png'), (width, height))
+                fon = pygame.transform.scale(load_image(level_fon), (width, height))
                 screen.blit(fon, (0, 0))
                 all_sprites.draw(screen)
                 all_sprites.update()
@@ -362,7 +379,7 @@ def look_levels():
     global coord_of_rectangle
     x1, y1, x2, y2 = coord_of_rectangle
     all_sprites = pygame.sprite.Group()
-    fon = pygame.transform.scale(load_image('fon1.png'), size)
+    fon = pygame.transform.scale(load_image(main_fon), size)
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 150)
     intro_text = list()
@@ -419,18 +436,51 @@ def check_click_for_fon(mouse_x, mouse_y, tuple_of_coord, dc):
     text_x, text_y, text_w, text_h = tuple_of_coord
     start_x, end_x, start_y, end_y = text_x, text_x + text_w, text_y, text_y + text_h
     if start_x <= mouse_x <= end_x and start_y <= mouse_y <= end_y:
-        print('fdfs')
         for i in list(dc.keys()):
-            print(dc[i])
             if dc[i][1] == tuple_of_coord:
+                print(dc[i][1], 'skfjdk')
+                print(tuple_of_coord, 'fsd')
                 number = int(i)
                 return number
     else:
         return ''
 
+
+def getting_num_from_dict(x, y, dc):
+    for i in list(dc.values())[:len(list(dc.values())) - 1]:
+        something = check_click_for_fon(x, y, i[1], dc)
+        if something != '':
+            print(something)
+            return (something, list(dc.values())[-1])
+    return ('', '')
+
+
+def putting_image(name):
+    print(name)
+    image = pygame.transform.scale(load_image(name), (370, 400))
+    screen.blit(image, (500, 277))
+
+
 def changing_design():
-    fon = pygame.transform.scale(load_image('fon2.png'), size)
+    global main_fon
+    global level_fon
+    global victory_fon
+    global losing_fon
+    fon = pygame.transform.scale(load_image(main_fon), size)
     screen.blit(fon, (0, 0))
+
+    sprites_for_design_window = pygame.sprite.Group()
+    back_arrow_sprite = pygame.sprite.Sprite()
+    back_arrow_sprite.image = pygame.transform.scale(load_image('back_arrow2.png', -1), (150, 150))
+    back_arrow_sprite.rect = back_arrow_sprite.image.get_rect()
+    back_arrow_sprite.rect.x, back_arrow_sprite.rect.y = 20, 530
+    sprites_for_design_window.add(back_arrow_sprite)
+
+    accept_button_sprite = pygame.sprite.Sprite()
+    accept_button_sprite.image = pygame.transform.scale(load_image('accept_button3.png', -1), (300, 300))
+    accept_button_sprite.rect = accept_button_sprite.image.get_rect()
+    accept_button_sprite.rect.x, accept_button_sprite.rect.y = 170, 460
+    sprites_for_design_window.add(accept_button_sprite)
 
     font = pygame.font.Font(None, 60)
     text = font.render('Главный фон', True, (255, 255, 255))
@@ -445,9 +495,14 @@ def changing_design():
                 text_x = 300
             text_y = 80 + intro_text_main.index(i) * 60
             text_w, text_h = text.get_width(), text.get_height()
+            print(j, text_x, text_y, text_w, text_h)
+            print(j, text_w)
+            if j == '1':
+                text_x, text_y, text_w, text_h = 60, 80, 23, 42
             text = font.render(str(j), True, (255, 255, 255))
             screen.blit(text, (text_x, text_y))
             main_fon_dict_coord[j].append((text_x, text_y, text_w, text_h))
+            print(main_fon_dict_coord)
 
     text_level = font.render('Фон уровня', True, (255, 255, 255))
     screen.blit(text_level, (550, 30))
@@ -460,8 +515,36 @@ def changing_design():
                 text_x = 800
             text_y = 80 + intro_text_level.index(i) * 60
             text_w, text_h = text.get_width(), text.get_height()
+
             text = font.render(str(j), True, (255, 255, 255))
             screen.blit(text, (text_x, text_y))
+            level_fon_dict_coord[j].append((text_x, text_y, text_w, text_h))
+
+    text_victory = font.render('Выигрышный экран', True, (255, 255, 255))
+    screen.blit(text_victory, (20, 270))
+    intro_text_victory = [list(map(str, range(1, 8)))]
+    for i in intro_text_victory:
+        for j in i:
+            text_x = int(j) * 60  - 20
+            text_y = 320
+            text_w, text_h = text.get_width(), text.get_height()
+            text = font.render(str(j), True, (255, 255, 255))
+            screen.blit(text, (text_x, text_y))
+            victory_fon_dict_coord[j].append((text_x, text_y, text_w, text_h))
+    text_losing = font.render('Проигрышный экран', True, (255, 255, 255))
+    screen.blit(text_losing, (20, 400))
+    intro_text_losing = [list(map(str, range(1, 3)))]
+    for i in intro_text_losing:
+        for j in i:
+            text_x = int(j) * 60 - 20
+            text_y = 450
+            text = font.render(j, True, (255, 255, 255))
+            text_w, text_h = text.get_width(), text.get_height()
+            screen.blit(text, (text_x, text_y))
+            losing_fon_dict_coord[j].append((text_x, text_y, text_w, text_h))
+    pygame.draw.rect(screen, (255, 255, 255), pygame.Rect((500, 277), (370, 400)), 1)
+
+    num, type_of_fon = '', ''
 
     while True:
         for event in pygame.event.get():
@@ -469,10 +552,44 @@ def changing_design():
                 terminate()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
-                for i in list(main_fon_dict_coord.values()):
-                    something = check_click_for_fon(x, y, i[1], main_fon_dict_coord)
-                    if something != '':
-                        print(something)
+                print(x, y)
+                if 20 <= x <= 170 and 530 <= y <= 680:
+                    splash_screen()
+                    break
+                elif 170 <= x <= 470 and 460 <= y <= 760:
+                    if type_of_fon != '':
+                        if type_of_fon == 'main':
+                            main_fon = dc_of_all_dict[type_of_fon][num][0]
+                        elif type_of_fon == 'level':
+                            level_fon = dc_of_all_dict[type_of_fon][num][0]
+                        elif type_of_fon == 'victory':
+                            victory_fon = dc_of_all_dict[type_of_fon][num][0]
+                        elif type_of_fon == 'losing':
+                            losing_fon = dc_of_all_dict[type_of_fon][num][0]
+                        changing_design()
+                        break
+                else:
+                    num_main, type_of_fon_main = getting_num_from_dict(x, y, main_fon_dict_coord)
+                    num_level, type_of_fon_level = getting_num_from_dict(x, y, level_fon_dict_coord)
+                    num_victory, type_of_fon_victory = getting_num_from_dict(x, y, victory_fon_dict_coord)
+                    num_losing, type_of_fon_losing = getting_num_from_dict(x, y, losing_fon_dict_coord)
+                    if num_main != '':
+                        num, type_of_fon = str(num_main), type_of_fon_main
+                        print(num)
+                        print(type_of_fon)
+                        putting_image(dc_of_all_dict[type_of_fon][num][0])
+                    elif num_level != '':
+                        num, type_of_fon = str(num_level), type_of_fon_level
+                        putting_image(dc_of_all_dict[type_of_fon][num][0])
+                    elif num_victory != '':
+                        num, type_of_fon = str(num_victory), type_of_fon_victory
+                        putting_image(dc_of_all_dict[type_of_fon][num][0])
+                    elif num_losing != '':
+                        num, type_of_fon = str(num_losing), type_of_fon_losing
+                        putting_image(dc_of_all_dict[type_of_fon][num][0])
+
+
+        sprites_for_design_window.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
 
@@ -482,7 +599,7 @@ def splash_screen():
                   'Начать игру',
                   'Изменение дизайна',
                   'Настройки']
-    fon = pygame.transform.scale(load_image('fon2.png'), size)
+    fon = pygame.transform.scale(load_image(main_fon), size)
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 70)
     text_coord = 50
@@ -507,7 +624,6 @@ def splash_screen():
                     look_levels()
 
                 elif (10 <= x <= 490) and (497 <= y <= 545):
-                    print('Изменение дизайна')
                     changing_design()
                 elif (10 <= x <= 265) and (595 <= y <= 644):
                     print('Настройки')
