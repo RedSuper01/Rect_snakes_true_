@@ -148,18 +148,46 @@ class Lines(pygame.sprite.Sprite):
 
 
 def change_diff(number_of_level):
-    if number_of_level <= 2:
+    if number_of_level == 1:
         return 10, 5
-    elif number_of_level <= 4:
-        return 12, 5
-    elif number_of_level <= 10:
-        return 16, 6
-    elif number_of_level <= 14:
-        return 18, 6
-    elif number_of_level <= 19:
+    elif number_of_level == 2:
+        return 10, 6
+    elif number_of_level == 3:
+        return 12, 6
+    elif number_of_level == 4:
+        return 14, 7
+    elif number_of_level == 5:
+        return 16, 7
+    elif number_of_level == 6:
+        return 16, 8
+    elif number_of_level == 7:
+        return 17, 8
+    elif number_of_level == 8:
+        return 18, 8
+    elif number_of_level == 9:
+        return 19, 7
+    elif number_of_level == 10:
+        return 19, 8
+    elif number_of_level == 11:
+        return 19, 9
+    elif number_of_level == 12:
         return 20, 7
-    else:
-        return 30, 7
+    elif number_of_level == 13:
+        return 20, 8
+    elif number_of_level == 14:
+        return 21, 7
+    elif number_of_level == 15:
+        return 21, 8
+    elif number_of_level == 16:
+        return 21, 9
+    elif number_of_level == 17:
+        return 22, 9
+    elif number_of_level == 18:
+        return 23, 8
+    elif number_of_level == 19:
+        return 24, 9
+    elif number_of_level == 20:
+        return 25, 10
 
 
 def victory_screen(number_of_level):
