@@ -15,7 +15,7 @@ levels_dict_coord = {'1': '', '2': '', '3': '', '4': '', '5': '',
                      '16': '', '17': '', '18': '', '19': '', '20': ''}
 main_fon_dict_coord = {'1': ['fon1.png'], '2': ['fon2.png'], '3': ['fon3.png'], '4': ['fon4.png'], '5': ['fon5.png'],
                        '6': ['fon6.png'], '7': ['fon7.png'], '8': ['fon8.png'], '9': ['fon9.png'], '10': ['fon10.png'],
-                       '11': ['fon11.png'], '12': ['fon12.png'], '13': ['fon13.png'], '14': ['fon14.png'], '15': ['fon15.png'],
+                       '11': ['fon11.png'], '12': ['victory_fon.png'], '13': ['fon13.png'], '14': ['fon14.png'], '15': ['fon15.png'],
                        'main': 'main'
                        }
 level_fon_dict_coord = {'1': ['fon1.png'], '2': ['fon2.png'], '3': ['fon3.png'], '4': ['fon4.png'], '5': ['fon5.png'],
@@ -42,7 +42,10 @@ dc_snakes = {}
 count_of_done_cuts = 0
 coord_of_rectangle = (x1, y1, x2, y2) = (150, 150, 750, 550)
 
-main_fon, level_fon, victory_fon, losing_fon = 'fon1.png', 'fon4.png', 'victory_fon.png', 'losing_fon2.png'
+file_of_fon = open('fon.txt', 'r', encoding='utf-8')
+
+main_fon, level_fon, victory_fon, losing_fon = [i.rstrip('\n') for i in file_of_fon.readlines()]
+file_of_fon.close()
 
 
 def load_image(name, color_key=None):
@@ -566,6 +569,12 @@ def changing_design():
                             victory_fon = dc_of_all_dict[type_of_fon][num][0]
                         elif type_of_fon == 'losing':
                             losing_fon = dc_of_all_dict[type_of_fon][num][0]
+                        file_of_fon = open('fon.txt', 'w', encoding='utf-8')
+                        file_of_fon.write(main_fon + '\n')
+                        file_of_fon.write(level_fon + '\n')
+                        file_of_fon.write(victory_fon + '\n')
+                        file_of_fon.write(losing_fon + '\n')
+                        file_of_fon.close()
                         changing_design()
                         break
                 else:
@@ -575,8 +584,6 @@ def changing_design():
                     num_losing, type_of_fon_losing = getting_num_from_dict(x, y, losing_fon_dict_coord)
                     if num_main != '':
                         num, type_of_fon = str(num_main), type_of_fon_main
-                        print(num)
-                        print(type_of_fon)
                         putting_image(dc_of_all_dict[type_of_fon][num][0])
                     elif num_level != '':
                         num, type_of_fon = str(num_level), type_of_fon_level

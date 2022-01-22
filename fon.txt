@@ -1,0 +1,4 @@
+fon2.png
+fon2.png
+victory_fon.png
+losing_fon1.png
