@@ -2,6 +2,8 @@ import pygame
 import sys
 import os
 import random
+import sqlite3
+import datetime
 
 FPS = 100
 pygame.init()
@@ -46,6 +48,8 @@ file_of_fon = open('fon.txt', 'r', encoding='utf-8')
 
 main_fon, level_fon, victory_fon, losing_fon = [i.rstrip('\n') for i in file_of_fon.readlines()]
 file_of_fon.close()
+
+timewatch = 0
 
 
 def load_image(name, color_key=None):
@@ -122,13 +126,13 @@ class Lines(pygame.sprite.Sprite):
             self.add(vertical_lines)
             self.image = pygame.Surface([5, 430])
             self.rect = pygame.Rect(x, y, 5, 430)
-            pygame.draw.line(screen, (0, 0, 0), (self.ax + 1, 135), (self.ax + 1, 570), 5)
+            pygame.draw.line(screen, (255, 255, 255), (self.ax + 1, 135), (self.ax + 1, 570), 5)
 
         elif self.type_of_line == 'horizontal':
             self.add(horizontal_lines)
             self.image = pygame.Surface([630, 5])
             self.rect = pygame.Rect(x, y, 630, 5)
-            pygame.draw.line(screen, (0, 0, 0), (135, self.ay + 1), (765, self.ay + 1), 5)
+            pygame.draw.line(screen, (255, 255, 255), (135, self.ay + 1), (765, self.ay + 1), 5)
 
     def update(self):
         if pygame.sprite.spritecollide(self, all_snakes, False):
@@ -161,6 +165,8 @@ def change_diff(number_of_level):
 def victory_screen(number_of_level):
     global coord_of_rectangle
     global count_of_done_cuts
+    global timewatch
+    timewatch = 0
     x1, y1, x2, y2 = coord_of_rectangle
     victory_sprite_group = pygame.sprite.Group()
 
@@ -210,9 +216,9 @@ def launch_level(number_of_level, x1, y1, x2, y2):
     global horizontal_borders
     global vertical_lines
     global horizontal_lines
-    global screen
     global count_of_done_cuts
     global coord_of_rectangle
+    global timewatch
 
     all_sprites = pygame.sprite.Group()
     horizontal_borders = pygame.sprite.Group()
@@ -253,9 +259,15 @@ def launch_level(number_of_level, x1, y1, x2, y2):
         bg = Snake(20, x1 + 50, y1 + 50)
         all_snakes.add(bg)
         dc_snakes[i] = bg
+
+
+
     losing = False
     victory = False
     running = True
+
+
+
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -300,6 +312,7 @@ def launch_level(number_of_level, x1, y1, x2, y2):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if losing:
                     x, y = event.pos
+                    timewatch = 0
                     if 200 <= x <= 425 and 500 <= y <= 725:
                         x1, y1, x2, y2 = coord_of_rectangle
                         launch_level(number_of_level, x1, y1, x2, y2)
@@ -325,7 +338,6 @@ def launch_level(number_of_level, x1, y1, x2, y2):
                     count_of_done_cuts = 0
                 else:
                     count_of_done_cuts += 1
-                    print(count_of_done_cuts, count_cuts)
                     if count_of_done_cuts < count_cuts:
                         if cursor.rect.x == x1 - 15 or cursor.rect.x == x2 - 15:
                             if cursor.rect.y - 150 <= (y2 - y1) // 2:
@@ -358,19 +370,33 @@ def launch_level(number_of_level, x1, y1, x2, y2):
                     else:
                         victory = True
                         pause = True
-                        victory_screen(number_of_level)
-                        count_of_done_cuts = 0
 
+                        connection = sqlite3.connect('game_result_data_base.db')
+                        cursor = connection.cursor()
+                        date = str(datetime.datetime.now())
+                        cursor.execute(f"""INSERT INTO results(time, result, level) VALUES('{date}', '{str(timewatch / 1000)}', '{str(number_of_level)}')""")
+                        connection.commit()
+                        timewatch = 0
+                        count_of_done_cuts = 0
+                        victory_screen(number_of_level)
             else:
                 vertical_lines.update()
                 horizontal_lines.update()
                 fon = pygame.transform.scale(load_image(level_fon), (width, height))
                 screen.blit(fon, (0, 0))
+                font = pygame.font.Font(None, 50)
+                text_count = font.render('Осталось срезов: ' + str(count_cuts - count_of_done_cuts), True, (255, 255, 255))
+                screen.blit(text_count, (530, 10))
+                text_rect_size = font.render('Размеры прямоугольника: ' + str(x2 - x1) + ', ' + str(y2 - y1), True, (255, 255, 255))
+                screen.blit(text_rect_size, (280, 50))
                 all_sprites.draw(screen)
                 all_sprites.update()
-
+                timewatch += clock.tick_busy_loop()
+                print(timewatch / 1000)
+                text_time = font.render('Время: ' + str(timewatch / 1000), True, (255, 255, 255))
+                screen.blit(text_time, (280, 90))
         pygame.display.flip()
-        clock.tick(70)
+        clock.tick()
 
 
 def terminate():
@@ -555,7 +581,6 @@ def changing_design():
                 terminate()
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
-                print(x, y)
                 if 20 <= x <= 170 and 530 <= y <= 680:
                     splash_screen()
                     break
@@ -605,7 +630,7 @@ def splash_screen():
     intro_text = ['Прямоугольники и змейки', '', 'Правила игры',
                   'Начать игру',
                   'Изменение дизайна',
-                  'Настройки']
+                  'Выйти из игры']
     fon = pygame.transform.scale(load_image(main_fon), size)
     screen.blit(fon, (0, 0))
     font = pygame.font.Font(None, 70)
@@ -633,7 +658,7 @@ def splash_screen():
                 elif (10 <= x <= 490) and (497 <= y <= 545):
                     changing_design()
                 elif (10 <= x <= 265) and (595 <= y <= 644):
-                    print('Настройки')
+                    terminate()
         pygame.display.flip()
         clock.tick(FPS)
 
