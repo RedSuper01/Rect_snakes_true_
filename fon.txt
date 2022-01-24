@@ -1,4 +1,5 @@
 fon2.png
-fon4.png
-victory_fon.png
-losing_fon1.png
+fon1.png
+victory_fon5.png
+losing_fon2.png
+snake_animation2.png
