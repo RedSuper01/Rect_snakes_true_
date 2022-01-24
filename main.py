@@ -5,7 +5,7 @@ import random
 import sqlite3
 import datetime
 
-FPS = 100
+FPS = 60
 pygame.init()
 size = width, height = 900, 700
 screen = pygame.display.set_mode(size)
@@ -14,27 +14,30 @@ clock = pygame.time.Clock()
 levels_dict_coord = {'1': '', '2': '', '3': '', '4': '', '5': '',
                      '6': '', '7': '', '8': '', '9': '', '10': '',
                      '11': '', '12': '', '13': '', '14': '', '15': '',
-                     '16': '', '17': '', '18': '', '19': '', '20': ''}
+                     '16': '', '17': '', '18': '', '19': '', '20': ''
+                     }
 main_fon_dict_coord = {'1': ['fon1.png'], '2': ['fon2.png'], '3': ['fon3.png'], '4': ['fon4.png'], '5': ['fon5.png'],
                        '6': ['fon6.png'], '7': ['fon7.png'], '8': ['fon8.png'], '9': ['fon9.png'], '10': ['fon10.png'],
-                       '11': ['fon11.png'], '12': ['victory_fon.png'], '13': ['fon13.png'], '14': ['fon14.png'], '15': ['fon15.png'],
+                       '11': ['fon11.png'], '12': ['victory_fon.png'], '13': ['fon13.png'], '14': ['fon14.png'],
+                       '15': ['fon15.png'],
                        'main': 'main'
                        }
 level_fon_dict_coord = {'1': ['fon1.png'], '2': ['fon2.png'], '3': ['fon3.png'], '4': ['fon4.png'], '5': ['fon5.png'],
-                       '6': ['fon6.png'], '7': ['fon7.png'], '8': ['fon8.png'], '9': ['fon9.png'], '10': ['fon10.png'],
-                       '11': ['fon11.png'], '12': ['fon12.png'], '13': ['fon13.png'], '14': ['fon14.png'], '15': ['fon15.png'],
+                        '6': ['fon6.png'], '7': ['fon7.png'], '8': ['fon8.png'], '9': ['fon9.png'], '10': ['fon10.png'],
+                        '11': ['fon11.png'], '12': ['fon12.png'], '13': ['fon13.png'], '14': ['fon14.png'],
+                        '15': ['fon15.png'],
                         'level': 'level'
-                       }
+                        }
 victory_fon_dict_coord = {'1': ['victory_fon.png'], '2': ['victory_fon2.png'], '3': ['victory_fon3.png'],
-                        '4': ['victory_fon4.png'], '5': ['victory_fon5.png'], '6': ['victory_fon6.png'],
-                         '7': ['victory_fon7.png'],
+                          '4': ['victory_fon4.png'], '5': ['victory_fon5.png'], '6': ['victory_fon6.png'],
+                          '7': ['victory_fon7.png'],
                           'victory': 'victory'}
 losing_fon_dict_coord = {'1': ['losing_fon1.png'], '2': ['losing_fon2.png'], 'losing': 'losing'}
 
 snake_dict_coord = {'1': ['snake1.png'], '2': ['snake_animation2.png'], 'snake': 'snake'}
 
-dc_of_all_dict = {'main': main_fon_dict_coord, 'level': level_fon_dict_coord, 'victory': victory_fon_dict_coord, 'losing': losing_fon_dict_coord,
-                  'snake': snake_dict_coord}
+dc_of_all_dict = {'main': main_fon_dict_coord, 'level': level_fon_dict_coord, 'victory': victory_fon_dict_coord,
+                  'losing': losing_fon_dict_coord, 'snake': snake_dict_coord}
 
 all_sprites = pygame.sprite.Group()
 horizontal_borders = pygame.sprite.Group()
@@ -42,20 +45,19 @@ vertical_borders = pygame.sprite.Group()
 vertical_lines = pygame.sprite.Group()
 horizontal_lines = pygame.sprite.Group()
 all_snakes = pygame.sprite.Group()
-dc_snakes = {}
 
+dc_snakes = {}
 count_of_done_cuts = 0
 coord_of_rectangle = (x1, y1, x2, y2) = (150, 150, 750, 550)
 
 file_of_fon = open('fon.txt', 'r', encoding='utf-8')
-
 main_fon, level_fon, victory_fon, losing_fon, snake_fon = [i.rstrip('\n') for i in file_of_fon.readlines()]
 file_of_fon.close()
 
-timewatch = 0
+time_watch = 0
 
 
-def load_image(name, color_key=None):
+def load_image(name, color_key=None): # Загрузка картинки для работы и также ее обрезка(если нужно)
     fullname = 'data\\' + name
     # если файл не существует, то выходим
     if not os.path.isfile(fullname):
@@ -72,8 +74,10 @@ def load_image(name, color_key=None):
         image = image.convert_alpha()
     return image
 
-
-def check_click(mouse_x, mouse_y, tuple_of_coord, dc):
+"""я при рисовании текста на экране записываю 4 его координаты в словарик, в котором ключи - это
+текст, а значения ключа - это координаты этого текста в виде кортежа. Затем я вытаскиваю этот кортеж и смотрю, если 
+координаты мыши находятся внутри этого прямоугольника, то возвращаю ключ"""
+def check_click(mouse_x, mouse_y, tuple_of_coord, dc):# проверяем на какой текст кликнул пользователь
     text_x, text_y, text_w, text_h = tuple_of_coord
     start_x, end_x, start_y, end_y = text_x, text_x + text_w, text_y, text_y + text_h
     if start_x <= mouse_x <= end_x and start_y <= mouse_y <= end_y:
@@ -84,14 +88,13 @@ def check_click(mouse_x, mouse_y, tuple_of_coord, dc):
     else:
         return ''
 
-
+"""Первый вид змейки без анимации"""
 class Snake(pygame.sprite.Sprite):
-    def __init__(self, radius, x, y):
+    def __init__(self, x, y):
         super().__init__(all_sprites)
-        self.radius = radius
         self.image = pygame.Surface((225, 225), pygame.SRCALPHA, 32)
-        fon = pygame.transform.scale(load_image('snake1.png', -1), (50, 50))
-        self.image.blit(fon, (0, 0))
+        snake_image = pygame.transform.scale(load_image('snake1.png', -1), (50, 50))
+        self.image.blit(snake_image, (0, 0))
         self.rect = pygame.Rect(x, y, 50, 45)
         self.vx = random.randint(-5, 5)
         self.vy = random.randint(-5, 5)
@@ -103,14 +106,17 @@ class Snake(pygame.sprite.Sprite):
         if pygame.sprite.spritecollideany(self, vertical_borders):
             self.vx = -self.vx
 
+"""Вторая змейка с анимацией"""
 class AnimatedSprite(pygame.sprite.Sprite):
-    def __init__(self, sheet, columns, rows, x1, y1, x, y):
+    def __init__(self, sheet, columns, rows, x, y, x1, y1):
         super().__init__(all_sprites)
         self.frames = []
         self.cut_sheet(sheet, columns, rows)
         self.cur_frame = 0
         self.image = self.frames[self.cur_frame]
-        self.rect = pygame.Rect(x, y, 50, 45)
+        self.rect = pygame.Rect(x, y, 50, 50)
+        self.rect.x = x1 + 50
+        self.rect.y = y1 + 50
         self.vx = random.randint(-5, 5)
         self.vy = random.randint(-5, 5)
 
@@ -132,7 +138,7 @@ class AnimatedSprite(pygame.sprite.Sprite):
         if pygame.sprite.spritecollideany(self, vertical_borders):
             self.vx = -self.vx
 
-
+"""Палочки от прямоугольника"""
 class Border(pygame.sprite.Sprite):
     def __init__(self, x1, y1, x2, y2):
         super().__init__(all_sprites)
@@ -148,6 +154,7 @@ class Border(pygame.sprite.Sprite):
             self.rect = pygame.Rect(self.x1, self.y1, self.x2 - self.x1, 5)
 
 
+"""Линии перпендикуляров"""
 class Lines(pygame.sprite.Sprite):
     def __init__(self, x, y, type_of_line):
         super().__init__(all_sprites)
@@ -179,6 +186,7 @@ class Lines(pygame.sprite.Sprite):
         return self.losing
 
 
+"""Сложность для каждого уровня"""
 def change_diff(number_of_level):
     if number_of_level == 1:
         return 10, 5
@@ -225,8 +233,8 @@ def change_diff(number_of_level):
 def victory_screen(number_of_level):
     global coord_of_rectangle
     global count_of_done_cuts
-    global timewatch
-    timewatch = 0
+    global time_watch
+    time_watch = 0
     x1, y1, x2, y2 = coord_of_rectangle
     victory_sprite_group = pygame.sprite.Group()
 
@@ -254,7 +262,6 @@ def victory_screen(number_of_level):
             if event.type == pygame.QUIT:
                 terminate()
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                print(*event.pos)
                 x, y = event.pos
                 if 350 <= x <= 450 and 562 <= y <= 662:
                     count_of_done_cuts = 0
@@ -278,7 +285,7 @@ def launch_level(number_of_level, x1, y1, x2, y2):
     global horizontal_lines
     global count_of_done_cuts
     global coord_of_rectangle
-    global timewatch
+    global time_watch
 
     all_sprites = pygame.sprite.Group()
     horizontal_borders = pygame.sprite.Group()
@@ -286,6 +293,7 @@ def launch_level(number_of_level, x1, y1, x2, y2):
     vertical_lines = pygame.sprite.Group()
     horizontal_lines = pygame.sprite.Group()
     all_snakes = pygame.sprite.Group()
+
     fon = pygame.transform.scale(load_image(level_fon), (width, height))
     screen.blit(fon, (0, 0))
 
@@ -316,12 +324,13 @@ def launch_level(number_of_level, x1, y1, x2, y2):
 
     n, count_cuts = change_diff(int(number_of_level))
     file_of_fon = open('fon.txt', 'r', encoding='utf-8')
-
     snake_fon = [i.rstrip('\n') for i in file_of_fon.readlines()][-1]
     file_of_fon.close()
+
+    bg = ''
     for i in range(n):
         if snake_fon == 'snake1.png':
-            bg = Snake(20, x1 + 50, y1 + 50)
+            bg = Snake(x1 + 50, y1 + 50)
         elif snake_fon == 'snake_animation2.png':
             bg = AnimatedSprite(load_image('snake_animation2.png', -1), 5, 3, 150, 150, x1 + 50, y1 + 50)
         all_snakes.add(bg)
@@ -375,7 +384,7 @@ def launch_level(number_of_level, x1, y1, x2, y2):
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if losing:
                     x, y = event.pos
-                    timewatch = 0
+                    time_watch = 0
                     if 200 <= x <= 425 and 500 <= y <= 725:
                         x1, y1, x2, y2 = coord_of_rectangle
                         launch_level(number_of_level, x1, y1, x2, y2)
@@ -437,9 +446,11 @@ def launch_level(number_of_level, x1, y1, x2, y2):
                         connection = sqlite3.connect('game_result_data_base.db')
                         cursor = connection.cursor()
                         date = str(datetime.datetime.now())
-                        cursor.execute(f"""INSERT INTO results(time, result, level) VALUES('{date}', '{str(timewatch / 1000)}', '{str(number_of_level)}')""")
+                        cursor.execute(
+                            f"""INSERT INTO results(time, result, level) VALUES('{date}', '{str(time_watch / 1000)}', \
+                            '{str(number_of_level)}')""")
                         connection.commit()
-                        timewatch = 0
+                        time_watch = 0
                         count_of_done_cuts = 0
                         victory_screen(number_of_level)
             else:
@@ -450,14 +461,16 @@ def launch_level(number_of_level, x1, y1, x2, y2):
                 font = pygame.font.Font(None, 50)
                 text_level = font.render('Уровень: ' + str(number_of_level), True, (255, 255, 255))
                 screen.blit(text_level, (300, 10))
-                text_count = font.render('Осталось срезов: ' + str(count_cuts - count_of_done_cuts), True, (255, 255, 255))
+                text_count = font.render('Осталось срезов: ' + str(count_cuts - count_of_done_cuts), True,
+                                         (255, 255, 255))
                 screen.blit(text_count, (530, 10))
-                text_rect_size = font.render('Размеры прямоугольника: ' + str(x2 - x1) + ', ' + str(y2 - y1), True, (255, 255, 255))
+                text_rect_size = font.render('Размеры прямоугольника: ' + str(x2 - x1) + ', ' + str(y2 - y1), True,
+                                             (255, 255, 255))
                 screen.blit(text_rect_size, (280, 50))
                 all_sprites.draw(screen)
                 all_sprites.update()
-                timewatch += clock.tick_busy_loop()
-                text_time = font.render('Время: ' + str(timewatch / 1000), True, (255, 255, 255))
+                time_watch += clock.tick_busy_loop()
+                text_time = font.render('Время: ' + str(time_watch / 1000), True, (255, 255, 255))
                 screen.blit(text_time, (280, 90))
         pygame.display.flip()
         clock.tick()
@@ -525,14 +538,13 @@ def look_levels():
         pygame.display.flip()
         clock.tick(FPS)
 
+
 def check_click_for_fon(mouse_x, mouse_y, tuple_of_coord, dc):
     text_x, text_y, text_w, text_h = tuple_of_coord
     start_x, end_x, start_y, end_y = text_x, text_x + text_w, text_y, text_y + text_h
     if start_x <= mouse_x <= end_x and start_y <= mouse_y <= end_y:
         for i in list(dc.keys()):
             if dc[i][1] == tuple_of_coord:
-                print(dc[i][1], 'skfjdk')
-                print(tuple_of_coord, 'fsd')
                 number = int(i)
                 return number
     else:
@@ -543,13 +555,11 @@ def getting_num_from_dict(x, y, dc):
     for i in list(dc.values())[:len(list(dc.values())) - 1]:
         something = check_click_for_fon(x, y, i[1], dc)
         if something != '':
-            print(something)
             return (something, list(dc.values())[-1])
     return ('', '')
 
 
 def putting_image(name):
-    print(name)
     image = pygame.transform.scale(load_image(name), (370, 400))
     screen.blit(image, (500, 277))
 
@@ -559,6 +569,7 @@ def changing_design():
     global level_fon
     global victory_fon
     global losing_fon
+    global snake_fon
     fon = pygame.transform.scale(load_image(main_fon), size)
     screen.blit(fon, (0, 0))
 
@@ -615,7 +626,7 @@ def changing_design():
     intro_text_victory = [list(map(str, range(1, 8)))]
     for i in intro_text_victory:
         for j in i:
-            text_x = int(j) * 60  - 20
+            text_x = int(j) * 60 - 20
             text_y = 320
             text_w, text_h = text.get_width(), text.get_height()
             text = font.render(str(j), True, (255, 255, 255))
@@ -644,7 +655,6 @@ def changing_design():
             text_w, text_h = text.get_width(), text.get_height()
             screen.blit(text, (text_x, text_y))
             snake_dict_coord[j].append((text_x, text_y, text_w, text_h))
-    print(snake_dict_coord)
     pygame.draw.rect(screen, (255, 255, 255), pygame.Rect((500, 277), (370, 400)), 1)
 
     num, type_of_fon = '', ''
@@ -686,7 +696,6 @@ def changing_design():
                     num_victory, type_of_fon_victory = getting_num_from_dict(x, y, victory_fon_dict_coord)
                     num_losing, type_of_fon_losing = getting_num_from_dict(x, y, losing_fon_dict_coord)
                     num_snake, type_of_fon_snake = getting_num_from_dict(x, y, snake_dict_coord)
-                    print(num_snake, type_of_fon_snake)
 
                     if num_main != '':
                         num, type_of_fon = str(num_main), type_of_fon_main
@@ -703,7 +712,6 @@ def changing_design():
                     elif num_snake != '':
                         num, type_of_fon = str(num_snake), type_of_fon_snake
                         putting_image(dc_of_all_dict[type_of_fon][num][0])
-
 
         sprites_for_design_window.draw(screen)
         pygame.display.flip()
@@ -747,12 +755,18 @@ def splash_screen():
         pygame.display.flip()
         clock.tick(FPS)
 
-def  open_rule():
-    intro_text = ['По прямоугольному полю бегает курсор. Им можно управлять ', 'с помощью клавиатуры.', 'Кнопки W, A, S, D отвечают за перемещение.',
-                  'Внутри прямоугольника летают змейки(их количество зависит от', 'уровня). ', 'При нажатии на SPACE проводится перпендикуляр к стороне,',
-                  'на которой стоит курсор. Если перпндикляр пересекает змейку,', 'то пользователь проигрывает. Если змейки не задеты, то коли-',
-                  'чество срезов уменьшается на один и прямоугольник уменьшается.', 'Перпендикуляр срезает меньшую часть прямоугольника.',
-                  'Если количество срезов равно 0 или хотя бы одна из сторон ме-', 'ньше 200 пикселей, то пользователь выигрывает(все результаты',
+
+def open_rule():
+    intro_text = ['По прямоугольному полю бегает курсор. Им можно управлять ', 'с помощью клавиатуры.',
+                  'Кнопки W, A, S, D отвечают за перемещение.',
+                  'Внутри прямоугольника летают змейки(их количество зависит от', 'уровня). ',
+                  'При нажатии на SPACE проводится перпендикуляр к стороне,',
+                  'на которой стоит курсор. Если перпндикляр пересекает змейку,',
+                  'то пользователь проигрывает. Если змейки не задеты, то коли-',
+                  'чество срезов уменьшается на один и прямоугольник уменьшается.',
+                  'Перпендикуляр срезает меньшую часть прямоугольника.',
+                  'Если количество срезов равно 0 или хотя бы одна из сторон ме-',
+                  'ньше 200 пикселей, то пользователь выигрывает(все результаты',
                   'можно посмотреть в базе данных)']
 
     fon = pygame.transform.scale(load_image(main_fon), size)
@@ -795,8 +809,6 @@ def  open_rule():
         rule_sprites.draw(screen)
         pygame.display.flip()
         clock.tick(FPS)
-
-
 
 
 splash_screen()
