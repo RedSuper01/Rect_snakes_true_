@@ -275,7 +275,14 @@
       <option name="project" value="LOCAL" />
       <updated>1643041504056</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Весь код">
+      <created>1643042787692</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1643042787692</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -336,7 +343,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Заставка игры(без функционала)" />
     <MESSAGE value="Заставка игры(без функционала)&#10;Добавлен осмысленный текст заставки" />
     <MESSAGE value="Заставка с подсоединением текста при нажатии на нее мышкой" />
     <MESSAGE value="Окно уровней и стрелка назад" />
@@ -361,6 +367,7 @@
     <MESSAGE value="Закончила со змейками(именно выбор дизайна и анимация) Плюс закончила с правилами игры" />
     <MESSAGE value="Полностью готовая игра" />
     <MESSAGE value="Дозагрузка файлов" />
-    <option name="LAST_COMMIT_MESSAGE" value="Дозагрузка файлов" />
+    <MESSAGE value="Весь код" />
+    <option name="LAST_COMMIT_MESSAGE" value="Весь код" />
   </component>
 </project>
