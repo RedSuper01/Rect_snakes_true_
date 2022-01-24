@@ -1,0 +1,111 @@
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pygame\r\nimport sys\r\nimport os\r\nFPS = 100\r\npygame.init()\r\nsize = width, height = 900, 700\r\nscreen = pygame.display.set_mode(size)\r\nclock = pygame.time.Clock()\r\nlevels_dict_coord = {'1': '', '2': '', '3': '', '4': '', '5': '',\r\n                     '6': '', '7': '', '8': '', '9': '', '10': '',\r\n                     '11': '', '12': '', '13': '', '14': '', '15': '',\r\n                     '16': '', '17': '', '18': '', '19': '', '20': ''}\r\n\r\n\r\ndef check_click(mouse_x, mouse_y, tuple_of_coord):\r\n    text_x, text_y, text_w, text_h = tuple_of_coord\r\n    start_x, end_x, start_y, end_y = text_x, text_x + text_w, text_y, text_y + text_h\r\n    if start_x <= mouse_x <= end_x and start_y <= mouse_y <= end_y:\r\n        for i in list(levels_dict_coord.keys()):\r\n            if levels_dict_coord[i] == tuple_of_coord:\r\n                number_of_level = int(i)\r\n                return number_of_level\r\n    else:\r\n        return ''\r\n\r\ndef launch_level(number_of_level):\r\n    print(number_of_level)\r\n\r\ndef terminate():\r\n    pygame.quit()\r\n    sys.exit()\r\n\r\n\r\ndef load_image(name, colorkey=None):\r\n    fullname = 'data\\\\' + name\r\n    # если файл не существует, то выходим\r\n    if not os.path.isfile(fullname):\r\n        print(f\"Файл с изображением '{fullname}' не найден\")\r\n        sys.exit()\r\n    image = pygame.image.load(fullname)\r\n\r\n    if colorkey is not None:\r\n        image = image.convert()\r\n        if colorkey == -1:\r\n            colorkey = image.get_at((0, 0))\r\n        image.set_colorkey(colorkey)\r\n    else:\r\n        image = image.convert_alpha()\r\n    return image\r\n\r\n\r\ndef look_levels():\r\n    fon = pygame.transform.scale(load_image('fon1.png'), size)\r\n    screen.blit(fon, (0, 0))\r\n    font = pygame.font.Font(None, 150)\r\n    intro_text = []\r\n    intro_text.append(list(map(str, range(1, 6))))\r\n    intro_text.append(list(map(str, range(6, 11))))\r\n    intro_text.append(list(map(str, range(11, 16))))\r\n    intro_text.append(list(map(str, range(16, 21))))\r\n    for i in intro_text:\r\n        for j in i:\r\n            text = font.render(j, True, (255, 255, 255))\r\n            if int(j) % 5 != 0:\r\n                text_x = (int(j) % 5) * 150 - 50\r\n            else:\r\n                text_x = 5 * 150 - 50\r\n            text_y = 50 + 150 * intro_text.index(i)\r\n            text_w = text.get_width()\r\n            text_h = text.get_height()\r\n            screen.blit(text, (text_x, text_y))\r\n\r\n            levels_dict_coord[str(j)] = (text_x, text_y, text_w, text_h)\r\n\r\n    all_sprites = pygame.sprite.Group()\r\n\r\n    back_arrow_sprite = pygame.sprite.Sprite()\r\n\r\n    back_arrow_sprite.image = load_image('back_arrow.png', colorkey=-1)\r\n    back_arrow_sprite.image = pygame.transform.scale(back_arrow_sprite.image, (100, 100))\r\n\r\n    back_arrow_sprite.rect = back_arrow_sprite.image.get_rect()\r\n    back_arrow_sprite.rect.x = 0\r\n    back_arrow_sprite.rect.y = 0\r\n\r\n    all_sprites.add(back_arrow_sprite)\r\n\r\n    running = True\r\n    while running:\r\n        for event in pygame.event.get():\r\n            if event.type == pygame.QUIT:\r\n                terminate()\r\n            elif event.type == pygame.MOUSEBUTTONDOWN:\r\n                x, y = event.pos\r\n                if x <= 100 and y <= 100:\r\n                    splash_screen()\r\n                for i in list(levels_dict_coord.values()):\r\n                    something = check_click(x, y, i)\r\n                    if something != '':\r\n                        launch_level(int(something))\r\n\r\n        all_sprites.draw(screen)\r\n        pygame.display.flip()\r\n        clock.tick(FPS)\r\n\r\ndef splash_screen():\r\n    intro_text = ['Прямоугольники и змейки', '', 'Правила игры',\r\n                  'Начать игру',\r\n                  'Изменение дизайна',\r\n                  'Настройки']\r\n    fon = pygame.transform.scale(load_image('fon2.png'), size)\r\n    screen.blit(fon, (0, 0))\r\n    font = pygame.font.Font(None, 70)\r\n    text_coord = 50\r\n    for line in intro_text:\r\n        string_rendered = font.render(line, 1, pygame.Color('white'))\r\n        intro_rect = string_rendered.get_rect()\r\n        text_coord += 50\r\n        intro_rect.top = text_coord\r\n        intro_rect.x = 10\r\n        text_coord += intro_rect.height\r\n        screen.blit(string_rendered, intro_rect)\r\n    running = True\r\n    while running:\r\n        for event in pygame.event.get():\r\n            if event.type == pygame.QUIT:\r\n                terminate()\r\n            elif event.type == pygame.MOUSEBUTTONDOWN:\r\n                x, y = event.pos\r\n                if (x >= 10 and x <= 350) and (y >= 298 and y <= 350):\r\n                    print('Правила игры')\r\n                elif (x >= 10 and x < 300) and (y >= 397 and y <= 450):\r\n                    print('Начать игру')\r\n                    look_levels()\r\n\r\n                elif (x >= 10 and x <= 490) and (y >= 497 and y <= 545):\r\n                    print('Изменение дизайна')\r\n                elif (x >= 10 and x <= 265) and (y >= 595 and y <= 644):\r\n                    print('Настройки')\r\n        pygame.display.flip()\r\n        clock.tick(FPS)\r\n\r\nsplash_screen()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	
++++ b/main.py	
+@@ -1,6 +1,7 @@
+ import pygame
+ import sys
+ import os
++
+ FPS = 100
+ pygame.init()
+ size = width, height = 900, 700
+@@ -23,15 +24,17 @@
+     else:
+         return ''
+ 
++
+ def launch_level(number_of_level):
+     print(number_of_level)
+ 
++
+ def terminate():
+     pygame.quit()
+     sys.exit()
+ 
+ 
+-def load_image(name, colorkey=None):
++def load_image(name, color_key=None):
+     fullname = 'data\\' + name
+     # если файл не существует, то выходим
+     if not os.path.isfile(fullname):
+@@ -39,11 +42,11 @@
+         sys.exit()
+     image = pygame.image.load(fullname)
+ 
+-    if colorkey is not None:
++    if color_key is not None:
+         image = image.convert()
+-        if colorkey == -1:
+-            colorkey = image.get_at((0, 0))
+-        image.set_colorkey(colorkey)
++        if color_key == -1:
++            color_key = image.get_at((0, 0))
++        image.set_colorkey(color_key)
+     else:
+         image = image.convert_alpha()
+     return image
+@@ -53,7 +56,7 @@
+     fon = pygame.transform.scale(load_image('fon1.png'), size)
+     screen.blit(fon, (0, 0))
+     font = pygame.font.Font(None, 150)
+-    intro_text = []
++    intro_text = list()
+     intro_text.append(list(map(str, range(1, 6))))
+     intro_text.append(list(map(str, range(6, 11))))
+     intro_text.append(list(map(str, range(11, 16))))
+@@ -76,7 +79,7 @@
+ 
+     back_arrow_sprite = pygame.sprite.Sprite()
+ 
+-    back_arrow_sprite.image = load_image('back_arrow.png', colorkey=-1)
++    back_arrow_sprite.image = load_image('back_arrow.png', color_key=-1)
+     back_arrow_sprite.image = pygame.transform.scale(back_arrow_sprite.image, (100, 100))
+ 
+     back_arrow_sprite.rect = back_arrow_sprite.image.get_rect()
+@@ -103,6 +106,7 @@
+         pygame.display.flip()
+         clock.tick(FPS)
+ 
++
+ def splash_screen():
+     intro_text = ['Прямоугольники и змейки', '', 'Правила игры',
+                   'Начать игру',
+@@ -113,7 +117,7 @@
+     font = pygame.font.Font(None, 70)
+     text_coord = 50
+     for line in intro_text:
+-        string_rendered = font.render(line, 1, pygame.Color('white'))
++        string_rendered = font.render(line, True, pygame.Color('white'))
+         intro_rect = string_rendered.get_rect()
+         text_coord += 50
+         intro_rect.top = text_coord
+@@ -127,17 +131,18 @@
+                 terminate()
+             elif event.type == pygame.MOUSEBUTTONDOWN:
+                 x, y = event.pos
+-                if (x >= 10 and x <= 350) and (y >= 298 and y <= 350):
++                if (10 <= x <= 350) and (298 <= y <= 350):
+                     print('Правила игры')
+-                elif (x >= 10 and x < 300) and (y >= 397 and y <= 450):
++                elif (10 <= x < 300) and (397 <= y <= 450):
+                     print('Начать игру')
+                     look_levels()
+ 
+-                elif (x >= 10 and x <= 490) and (y >= 497 and y <= 545):
++                elif (10 <= x <= 490) and (497 <= y <= 545):
+                     print('Изменение дизайна')
+-                elif (x >= 10 and x <= 265) and (y >= 595 and y <= 644):
++                elif (10 <= x <= 265) and (595 <= y <= 644):
+                     print('Настройки')
+         pygame.display.flip()
+         clock.tick(FPS)
+ 
++
+ splash_screen()

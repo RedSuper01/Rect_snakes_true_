@@ -1,0 +1,24 @@
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pygame\r\nimport sys\r\nimport os\r\nFPS = 100\r\npygame.init()\r\nsize = width, height = 900, 700\r\nscreen = pygame.display.set_mode(size)\r\nclock = pygame.time.Clock()\r\n\r\ndef terminate():\r\n    pygame.quit()\r\n    sys.exit()\r\n\r\n\r\ndef load_image(name, colorkey=None):\r\n    fullname = 'data\\\\' + name\r\n    # если файл не существует, то выходим\r\n    if not os.path.isfile(fullname):\r\n        print(f\"Файл с изображением '{fullname}' не найден\")\r\n        sys.exit()\r\n    image = pygame.image.load(fullname)\r\n\r\n    if colorkey is not None:\r\n        image = image.convert()\r\n        if colorkey == -1:\r\n            colorkey = image.get_at((0, 0))\r\n        image.set_colorkey(colorkey)\r\n    else:\r\n        image = image.convert_alpha()\r\n    return image\r\n\r\n\r\ndef start_screen():\r\n    intro_text = ['Прямоугольники и змейки', '', 'Правила игры',\r\n                  'Начать игру',\r\n                  'Изменение дизайна']\r\n    fon = pygame.transform.scale(load_image('fon2.png'), size)\r\n    screen.blit(fon, (0, 0))\r\n    font = pygame.font.Font(None, 30)\r\n    text_coord = 50\r\n    for line in intro_text:\r\n        string_rendered = font.render(line, 1, pygame.Color('blue'))\r\n        intro_rect = string_rendered.get_rect()\r\n        text_coord += 10\r\n        intro_rect.top = text_coord\r\n        intro_rect.x = 10\r\n        text_coord += intro_rect.height\r\n        screen.blit(string_rendered, intro_rect)\r\n\r\n    while True:\r\n        for event in pygame.event.get():\r\n            if event.type == pygame.QUIT:\r\n                terminate()\r\n            elif event.type == pygame.MOUSEBUTTONDOWN:\r\n                pass\r\n        pygame.display.flip()\r\n        clock.tick(FPS)\r\n\r\nstart_screen()\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	
++++ b/main.py	
+@@ -56,4 +56,5 @@
+         pygame.display.flip()
+         clock.tick(FPS)
+ 
++
+ start_screen()
+diff --git a/venv/Lib/site-packages/pip/_vendor/urllib3/contrib/__init__.py b/venv/Lib/site-packages/pip/_vendor/urllib3/contrib/__init__.py
+new file mode 100644
+diff --git a/venv/Lib/site-packages/pip/_vendor/urllib3/contrib/_securetransport/__init__.py b/venv/Lib/site-packages/pip/_vendor/urllib3/contrib/_securetransport/__init__.py
+new file mode 100644
+diff --git a/venv/Lib/site-packages/pip/_vendor/urllib3/packages/backports/__init__.py b/venv/Lib/site-packages/pip/_vendor/urllib3/packages/backports/__init__.py
+new file mode 100644
+diff --git a/venv/Lib/site-packages/pip/_vendor/html5lib/filters/__init__.py b/venv/Lib/site-packages/pip/_vendor/html5lib/filters/__init__.py
+new file mode 100644

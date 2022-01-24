@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="71db676e-e4e7-45d1-aa3a-e085245b557a" name="Default Changelist" comment="Дозагрузка файлов" />
+    <list id="6f4d84c6-72e7-49d9-bcf4-9a5a61da2d78" name="Исправлены мелкие недочеты" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="launching_level_with_rectangles_and_etc" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="22k18rOuJ8JiyEr0BAO57cH4CTc" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="TODO_SCOPE" value="All Places" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\anast\PygameProject\data" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.main">
+    <configuration name="Work7" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="PygameProject" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../PycharmProjects/pythonProject3" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../PycharmProjects/pythonProject3/Work7.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="PygameProject" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.Work7" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="71db676e-e4e7-45d1-aa3a-e085245b557a" name="Default Changelist" comment="" />
+      <changelist id="6f4d84c6-72e7-49d9-bcf4-9a5a61da2d78" name="Исправлены мелкие недочеты" comment="" />
+      <created>1640366614795</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1640366614795</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Заставка игры(без функционала)">
+      <created>1640370505486</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1640370505486</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Заставка игры(без функционала)&#10;Добавлен осмысленный текст заставки">
+      <created>1640770746466</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1640770746466</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Заставка с подсоединением текста при нажатии на нее мышкой">
+      <created>1640771772850</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1640771772850</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Окно уровней и стрелка назад">
+      <created>1640775074483</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1640775074483</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Добавление всех спрайтов в git">
+      <created>1640775762394</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1640775762394</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Экран с уровнями без функционала номеров уровней, но со всеми цифрами">
+      <created>1640779585864</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1640779585864</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Сдедан экран с уровнями(подключены цифры и они &quot;чувствуют&quot;, когда на них нажимают. В целом сделан экран с уровнями">
+      <created>1641040368165</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1641040368165</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Просто понять">
+      <created>1641041402658</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1641041402658</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Исправлены мелкие недочеты">
+      <created>1641047912817</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1641047912817</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Тестирование">
+      <created>1642179407082</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1642179407082</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Вернула все обратно">
+      <created>1642180817611</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1642180817611</updated>
+    </task>
+    <task id="LOCAL-00012" summary="летают и стукаются змейки">
+      <created>1642188171397</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1642188171397</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Движение курсора по границам прямоугольника">
+      <created>1642190875774</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1642190875774</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Проигрышная заставка">
+      <created>1642569491173</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1642569491173</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Сделала координаты гибче(заменила цифры на переменную)">
+      <created>1642572031376</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1642572031376</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Загрузка картинок выхода и &quot;начать заново&quot;">
+      <created>1642572316295</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1642572316295</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Выигрышная механика работает, идет очет срезов и уменьшение прямоугольника&#10;А также игра будет остановлена, когда игрок выигрывает">
+      <created>1642690344432</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1642690344432</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Готова выигрышная заставка с функционалом">
+      <created>1642700971494</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1642700971494</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Немного подправила код">
+      <created>1642701316665</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1642701316665</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Функция изменения дизайна полностью сделана">
+      <created>1642837596958</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1642837596958</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Установлено время и запись в БД">
+      <created>1642843328754</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1642843328754</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Установлена сложность для каждого уровня">
+      <created>1642843877882</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1642843877882</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Закончила со змейками(именно выбор дизайна и анимация) Плюс закончила с правилами игры">
+      <created>1643032863115</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1643032863115</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Полностью готовая игра">
+      <created>1643040100201</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1643040100201</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Дозагрузка файлов">
+      <created>1643041504056</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1643041504056</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="SHOW_OTHER_BRANCHES" value="true" />
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+      </list>
+    </option>
+    <option name="COLUMN_ID_VISIBILITY">
+      <map>
+        <entry key="Table.Default.Author.ColumnIdVisibility" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="HEAD" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="master" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="levels" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/master" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Заставка игры(без функционала)" />
+    <MESSAGE value="Заставка игры(без функционала)&#10;Добавлен осмысленный текст заставки" />
+    <MESSAGE value="Заставка с подсоединением текста при нажатии на нее мышкой" />
+    <MESSAGE value="Окно уровней и стрелка назад" />
+    <MESSAGE value="Добавление всех спрайтов в git" />
+    <MESSAGE value="Экран с уровнями без функционала номеров уровней, но со всеми цифрами" />
+    <MESSAGE value="Сдедан экран с уровнями(подключены цифры и они &quot;чувствуют&quot;, когда на них нажимают. В целом сделан экран с уровнями" />
+    <MESSAGE value="Просто понять" />
+    <MESSAGE value="Исправлены мелкие недочеты" />
+    <MESSAGE value="Тестирование" />
+    <MESSAGE value="Вернула все обратно" />
+    <MESSAGE value="летают и стукаются змейки" />
+    <MESSAGE value="Движение курсора по границам прямоугольника" />
+    <MESSAGE value="Проигрышная заставка" />
+    <MESSAGE value="Сделала координаты гибче(заменила цифры на переменную)" />
+    <MESSAGE value="Загрузка картинок выхода и &quot;начать заново&quot;" />
+    <MESSAGE value="Выигрышная механика работает, идет очет срезов и уменьшение прямоугольника&#10;А также игра будет остановлена, когда игрок выигрывает" />
+    <MESSAGE value="Готова выигрышная заставка с функционалом" />
+    <MESSAGE value="Немного подправила код" />
+    <MESSAGE value="Функция изменения дизайна полностью сделана" />
+    <MESSAGE value="Установлено время и запись в БД" />
+    <MESSAGE value="Установлена сложность для каждого уровня" />
+    <MESSAGE value="Закончила со змейками(именно выбор дизайна и анимация) Плюс закончила с правилами игры" />
+    <MESSAGE value="Полностью готовая игра" />
+    <MESSAGE value="Дозагрузка файлов" />
+    <option name="LAST_COMMIT_MESSAGE" value="Дозагрузка файлов" />
+  </component>
+</project>
